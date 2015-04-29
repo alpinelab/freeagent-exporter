@@ -9,6 +9,7 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sidekiq'
+gem 'rspec'
 
 group :production do
   gem 'rails_12factor'
