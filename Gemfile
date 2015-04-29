@@ -10,6 +10,8 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sidekiq'
 gem 'rspec'
+gem 'haml'
+gem 'twitter-bootstrap-rails'
 
 group :production do
   gem 'rails_12factor'

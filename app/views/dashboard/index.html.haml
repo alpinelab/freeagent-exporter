@@ -1,0 +1,30 @@
+!!!
+%html{:lang => "en"}
+  %head
+    %meta{:charset => "utf-8"}/
+    %meta{:content => "IE=edge", "http-equiv" => "X-UA-Compatible"}/
+    %meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}/
+    %title FreeAgent Exporter
+  %body
+    %nav.navbar.navbar-default
+      .container-fluid
+        .navbar-header
+          %a.navbar-brand{:href => "#"}
+            %img{:alt => "FreeAgent Exporter", :src => "#"}
+
+    .container-fluid
+      .row
+        %table.table.table-hover
+          %thead
+            %tr
+              %th #
+              %th Month
+              %th All Checked
+              %th Download
+          %tbody
+            - @exports.each do |export|
+              %tr
+                %td= export.id
+                %td= export.created_at.month
+                %td= export.ticked
+                %td= export.s3_url
