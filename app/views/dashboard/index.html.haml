@@ -1,9 +1,9 @@
 !!!
 %html{:lang => "en"}
   %head
-    %meta{:charset => "utf-8"}/
-    %meta{:content => "IE=edge", "http-equiv" => "X-UA-Compatible"}/
-    %meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}/
+    %meta{:charset => "utf-8"}
+    %meta{:content => "IE=edge", "http-equiv" => "X-UA-Compatible"}
+    %meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}
     %title FreeAgent Exporter
   %body
     %nav.navbar.navbar-default
@@ -11,7 +11,8 @@
         .navbar-header
           %a.navbar-brand{:href => "#"}
             %img{:alt => "FreeAgent Exporter", :src => "#"}
-
+          = link_to "authorize_url", @authorize_url, target: '_blank' if @authorize_url
+          = @company_name
     .container-fluid
       .row
         %table.table.table-hover

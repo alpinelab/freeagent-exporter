@@ -12,6 +12,8 @@ gem 'sidekiq'
 gem 'rspec'
 gem 'haml'
 gem 'twitter-bootstrap-rails'
+gem 'oauth2'
+gem 'dotenv-rails', :groups => [:development, :test]
 
 group :production do
   gem 'rails_12factor'
