@@ -24,8 +24,20 @@ class ExpensesImport
           unexplained += 1 if bt.unexplained_amount != 0
         end
 
-        export = Export.find_or_create_by(user: user, date: date)
-        export.update_attributes(n_to_explain: unexplained, name: date.to_s(:month_and_year))
+        #export = Export.find_or_create_by(user: user, date: date)
+        #export.update_attributes(n_to_explain: unexplained, name: date.to_s(:month_and_year))
+
+        if unexplained == 0 && bank_transactions.length > 0
+          bank_transactions.each do |bt|
+            explanation = FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations.first
+            url = explanation['attachment']['content_src'] if explanation['attachment']
+            if url.present?
+              uri = URI(url)
+              data = Net::HTTP.get(uri)
+              #Rails.root.join('tmp').to_s
+            end
+          end
+        end
 
         break if date > Date.today.at_end_of_month
         date = date.next_month
