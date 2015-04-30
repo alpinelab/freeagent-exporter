@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
     where(provider: auth.provider, uid: auth.uid.to_s).first_or_create do |user|
       user.email = auth.info.email
       user.password = Devise.friendly_token[0,20]
+      user.access_token = auth.credentials.token
     end
   end
 
@@ -18,6 +19,7 @@ class User < ActiveRecord::Base
     super.tap do |user|
       if data = session["devise.freeagent_data"] && session["devise.freeagent_data"]["extra"]["raw_info"]
         user.email = data["email"] if user.email.blank?
+        user.access_token = session["devise.freeagent_data"]['credentials']['token']
       end
     end
   end

@@ -257,7 +257,7 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
 
-  config.omniauth :freeagent, ENV['FREEAGENT_ID'], ENV['FREEAGENT_SECRET'], {environment: :sandbox}
+  config.omniauth :freeagent, ENV['FREEAGENT_ID'], ENV['FREEAGENT_SECRET'], { environment: :sandbox }
 
   OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 end
