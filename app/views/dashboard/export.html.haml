@@ -4,15 +4,17 @@
       %thead
         %tr
           %th #
+          %th Name
           %th Month
-          %th All Checked
+          %th Number left to explain
           %th Download
       %tbody
         - @exports.each do |export|
           %tr
             %td= export.id
-            %td= export.created_at.month
-            %td= export.ticked
+            %td= export.name
+            %td= export.date
+            %td= export.n_to_explain
             %td= export.s3_url
 
 = link_to "Sign out",  destroy_user_session_path, method: :delete

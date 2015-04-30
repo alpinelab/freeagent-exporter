@@ -7,7 +7,7 @@ class DashboardController < ApplicationController
   end
 
   def export
-    @exports = Export.all
+    @exports = current_user.exports
   end
 
 end

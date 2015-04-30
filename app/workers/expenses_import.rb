@@ -14,6 +14,7 @@ class ExpensesImport
 
       date = (Date.today - 2.years).at_beginning_of_month
       loop do
+        unexplained = 0
         @bank_transactions = token.get('/v2/bank_transactions',
           :params => {
             'bank_account' => ENV['FREEAGENT_BANK_ACCOUNT_ID'],
@@ -22,6 +23,13 @@ class ExpensesImport
             })
         resp = JSON.parse @bank_transactions.body
         puts "#{date} got #{resp['bank_transactions'].length} bank_transactions"
+
+        resp['bank_transactions'].each do |bt|
+          unexplained += 1 if bt['unexplained_amount'] != "0.0"
+        end
+        export = Export.find_or_create_by(user: user, date: date)
+        export.update_attributes(n_to_explain: unexplained, name: date.to_s(:month_and_year))
+
         break if date > Date.today.at_end_of_month
         date = date.next_month
       end

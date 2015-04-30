@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
 
   devise :omniauthable, :omniauth_providers => [:freeagent]
 
+  has_many :exports
+
   def self.from_omniauth(auth)
     p auth
     where(provider: auth.provider, uid: auth.uid.to_s).first_or_create do |user|

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150430092430) do
+ActiveRecord::Schema.define(version: 20150430115549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,10 +19,14 @@ ActiveRecord::Schema.define(version: 20150430092430) do
   create_table "exports", force: true do |t|
     t.string   "name"
     t.string   "s3_url"
-    t.boolean  "ticked"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
+    t.datetime "date"
+    t.integer  "n_to_explain"
   end
+
+  add_index "exports", ["user_id"], name: "index_exports_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
