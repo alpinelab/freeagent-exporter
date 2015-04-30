@@ -1,5 +1,14 @@
 GIT
-  remote: git@github.com:jasiek/omniauth-freeagent.git
+  remote: git://github.com/alpinelab/freeagent-api-ruby.git
+  revision: d5eef553dff5041c67552027d26a32d7dd1130ff
+  branch: master
+  specs:
+    freeagent-api-ruby (0.0.1)
+      multi_json
+      oauth2 (~> 1.0)
+
+GIT
+  remote: git://github.com/jasiek/omniauth-freeagent.git
   revision: 1050f719c9aee3791e45888a2039c963c6a9bf2e
   specs:
     omniauth-freeagent (0.0.1)
@@ -194,6 +203,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   devise
   dotenv-rails
+  freeagent-api-ruby!
   haml
   jbuilder (~> 2.0)
   jquery-rails

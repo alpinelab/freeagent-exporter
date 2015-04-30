@@ -15,7 +15,9 @@ gem 'twitter-bootstrap-rails'
 gem 'oauth2'
 gem 'dotenv-rails', :groups => [:development, :test]
 gem 'devise'
-gem 'omniauth-freeagent', git: 'git@github.com:jasiek/omniauth-freeagent.git'
+gem 'omniauth-freeagent', github: 'jasiek/omniauth-freeagent'
+gem 'freeagent-api-ruby', github: 'alpinelab/freeagent-api-ruby', branch: 'master'
+#bundle config local.freeagent-api-ruby path/path
 
 group :production do
   gem 'rails_12factor'
