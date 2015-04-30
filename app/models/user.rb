@@ -19,7 +19,6 @@ class User < ActiveRecord::Base
     super.tap do |user|
       if data = session["devise.freeagent_data"] && session["devise.freeagent_data"]["extra"]["raw_info"]
         user.email = data["email"] if user.email.blank?
-        user.access_token = session["devise.freeagent_data"]['credentials']['token']
       end
     end
   end

@@ -8,9 +8,9 @@ class ExpensesImport
       site: ENV['FREEAGENT_URL'],
       authorize_url: '/v2/approve_app',
       token_url: '/v2/token_endpoint')
-    setting = Setting.first
-    if setting
-      token = OAuth2::AccessToken.new(client, setting.token)
+    user = User.first
+    if user
+      token = OAuth2::AccessToken.new(client, user.access_token)
 
       date = (Date.today - 2.years).at_beginning_of_month
       loop do
