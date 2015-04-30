@@ -14,6 +14,8 @@ gem 'haml'
 gem 'twitter-bootstrap-rails'
 gem 'oauth2'
 gem 'dotenv-rails', :groups => [:development, :test]
+gem 'devise'
+gem 'omniauth-freeagent', git: 'git@github.com:jasiek/omniauth-freeagent.git'
 
 group :production do
   gem 'rails_12factor'

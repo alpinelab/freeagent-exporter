@@ -1,0 +1,17 @@
+!!!
+%html
+  %head
+    %title Freeagent Exporter
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+  %body
+    %nav.navbar.navbar-default
+      .container-fluid
+        .navbar-header
+          %a.navbar-brand{:href => root_path}
+            %img{:alt => "FreeAgent Exporter", :src => "#"}
+          = @company_name
+    %p.notice= notice
+    %p.alert= alert
+    = yield

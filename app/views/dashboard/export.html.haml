@@ -1,0 +1,18 @@
+.container-fluid
+  .row
+    %table.table.table-hover
+      %thead
+        %tr
+          %th #
+          %th Month
+          %th All Checked
+          %th Download
+      %tbody
+        - @exports.each do |export|
+          %tr
+            %td= export.id
+            %td= export.created_at.month
+            %td= export.ticked
+            %td= export.s3_url
+
+= link_to "Sign out",  destroy_user_session_path, method: :delete

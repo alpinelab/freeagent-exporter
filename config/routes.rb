@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+
   root  'dashboard#index'
-  get   'oauth2/callback', to: 'dashboard#callback'
+
+  get 'export', to: 'dashboard#export'
 end
