@@ -1,7 +1,0 @@
-{
-  "name": "FreeAgent exporter",
-  "description": "Export and download monthly archives of FreeAgent explainations with attachments for your human non-tech-savvy accountant",
-  "repository": "https://github.com/alpinelab/freeagent-exporter",
-  "logo": "https://raw.githubusercontent.com/alpinelab/freeagent-exporter/master/app/assets/images/freeagent-exporter.png",
-  "keywords": ["freeagent", "export", "archive", "accounting"]
-}
