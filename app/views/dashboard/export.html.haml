@@ -15,6 +15,6 @@
             %td= export.name
             %td= export.date
             %td= export.n_to_explain
-            %td= export.s3_url
+            %td= link_to "Download Archive", export.s3_url if export.s3_url
 
 = link_to "Sign out",  destroy_user_session_path, method: :delete

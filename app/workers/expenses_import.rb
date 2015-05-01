@@ -9,6 +9,7 @@ class ExpensesImport
   def perform(name, count)
     root_path = Rails.root.join('tmp', 'worker')
     FileUtils.mkdir_p(root_path)
+    s3 = Aws::S3::Resource.new
     user = User.first
     if user
       FreeAgent.access_details(
@@ -20,6 +21,7 @@ class ExpensesImport
 
       date = (Date.today - 2.years).at_beginning_of_month
       loop do
+        FileUtils.rm_rf(Dir.glob("#{root_path}/*"))
         unexplained = 0
         bank_transactions = FreeAgent::BankTransaction.find_all_by_bank_account(ENV['FREEAGENT_BANK_ACCOUNT_ID'], { from_date: date, to_date: date.at_end_of_month })
 
@@ -29,12 +31,13 @@ class ExpensesImport
           unexplained += 1 if bt.unexplained_amount != 0
         end
 
-        #export = Export.find_or_create_by(user: user, date: date)
-        #export.update_attributes(n_to_explain: unexplained, name: date.to_s(:month_and_year))
+        export = Export.find_or_create_by(user: user, date: date)
+        export.update_attributes(n_to_explain: unexplained, name: date.to_s(:month_and_year))
 
         if unexplained == 0 && bank_transactions.length > 0
-          zipfile_name = "#{root_path}/#{date.to_s(:month_and_year_file)}.zip"
-          Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+          zip_file_name = "#{date.to_s(:month_and_year_file)}.zip"
+          zip_full_path = "#{root_path}/#{zip_file_name}"
+          Zip::File.open(zip_full_path, Zip::File::CREATE) do |zipfile|
             bank_transactions.each do |bt|
               explanation = FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations.first
               if explanation['attachment']
@@ -47,7 +50,11 @@ class ExpensesImport
               end
             end
           end
-          FileUtils.rm_rf(Dir.glob("#{root_path}/*"))
+          obj = s3.bucket(ENV['AWS_BUCKET']).object("#{user.id}/#{zip_file_name}")
+          if obj.upload_file(zip_full_path)
+            url = obj.presigned_url(:get, expires_in: 604800).to_s
+            export.update_attributes(s3_url: url)
+          end
         end
 
         break if date > Date.today.at_end_of_month
