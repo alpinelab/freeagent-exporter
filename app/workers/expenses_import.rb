@@ -33,15 +33,23 @@ class ExpensesImport
     end
   end
 
-  def create_zipfile_from_attachments(filename, bank_transactions)
+  def create_zipfile_from_attachments(filename, bank_transactions, expenses)
     Zip::File.open("#{@root_path}/#{filename}", Zip::File::CREATE) do |zipfile|
+
       zipfile.dir.mkdir("bank_transactions")
+      zipfile.dir.mkdir("expenses")
+
       bank_transactions.each do |bt|
         explanation = FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations
 
         attachment_into_zip zipfile, explanation.attachment, 'bank_transactions' if explanation.attachment
         attachment_into_zip zipfile, explanation.paid_bill.attachment, 'bank_transactions' if explanation.paid_bill
       end
+
+      expenses.each do |expense|
+        attachment_into_zip zipfile, expense.attachment, 'expenses' if expense.attachment
+      end
+
     end
   end
 
@@ -51,11 +59,14 @@ class ExpensesImport
     loop do
       FileUtils.rm_rf(Dir.glob("#{@root_path}/*")) #clean the temp folder
       unexplained = 0
+
       bank_transactions = FreeAgent::BankTransaction.find_all_by_bank_account(
         ENV['FREEAGENT_BANK_ACCOUNT_ID'],
         { from_date: date, to_date: date.at_end_of_month })
+      expenses = FreeAgent::Expense.filter(
+        { from_date: date, to_date: date.at_end_of_month })
 
-      puts "#{date} got #{bank_transactions.length} bank_transactions"
+      puts "#{date} got #{bank_transactions.length} bank_transactions and #{expenses.length} expenses"
 
       bank_transactions.each { |bt| unexplained += 1 if bt.unexplained_amount != 0 }
 
@@ -64,7 +75,7 @@ class ExpensesImport
 
       if unexplained == 0 && bank_transactions.length > 0
         filename = "#{date.to_s(:month_and_year_file)}.zip"
-        create_zipfile_from_attachments filename, bank_transactions
+        create_zipfile_from_attachments filename, bank_transactions, expenses
         url = upload_file filename
         export.update_attributes(s3_url: url) if url
       end
