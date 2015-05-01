@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/alpinelab/freeagent-api-ruby.git
-  revision: d5eef553dff5041c67552027d26a32d7dd1130ff
+  revision: 9a383c86c61626c7bd9d45ceb4007309f0f5219a
   branch: master
   specs:
     freeagent-api-ruby (0.0.1)
@@ -151,6 +151,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.2.0)
     rspec-support (3.2.2)
+    rubyzip (1.1.7)
     sass (3.2.19)
     sass-rails (4.0.5)
       railties (>= 4.0.0, < 5.0)
@@ -213,6 +214,7 @@ DEPENDENCIES
   rails (= 4.1.8)
   rails_12factor
   rspec
+  rubyzip
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)
   sidekiq

@@ -18,6 +18,7 @@ gem 'devise'
 gem 'omniauth-freeagent', github: 'jasiek/omniauth-freeagent'
 gem 'freeagent-api-ruby', github: 'alpinelab/freeagent-api-ruby', branch: 'master'
 #bundle config local.freeagent-api-ruby path/path
+gem 'rubyzip'
 
 group :production do
   gem 'rails_12factor'

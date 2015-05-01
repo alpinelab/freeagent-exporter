@@ -1,9 +1,14 @@
 require 'freeagent'
+require 'zip'
+require 'open-uri'
+require 'fileutils'
 
 class ExpensesImport
   include Sidekiq::Worker
 
   def perform(name, count)
+    root_path = Rails.root.join('tmp', 'worker')
+    FileUtils.mkdir_p(root_path)
     user = User.first
     if user
       FreeAgent.access_details(
@@ -28,15 +33,21 @@ class ExpensesImport
         #export.update_attributes(n_to_explain: unexplained, name: date.to_s(:month_and_year))
 
         if unexplained == 0 && bank_transactions.length > 0
-          bank_transactions.each do |bt|
-            explanation = FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations.first
-            url = explanation['attachment']['content_src'] if explanation['attachment']
-            if url.present?
-              uri = URI(url)
-              data = Net::HTTP.get(uri)
-              #Rails.root.join('tmp').to_s
+          zipfile_name = "#{root_path}/#{date.to_s(:month_and_year_file)}.zip"
+          Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+            bank_transactions.each do |bt|
+              explanation = FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations.first
+              if explanation['attachment']
+                filename = explanation['attachment']['file_name']
+                full_path = "#{root_path}/#{filename}"
+                open(full_path, 'wb') do |file|
+                  file << open(explanation['attachment']['content_src']).read
+                end
+                zipfile.add(filename, full_path)
+              end
             end
           end
+          FileUtils.rm_rf(Dir.glob("#{root_path}/*"))
         end
 
         break if date > Date.today.at_end_of_month
