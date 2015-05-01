@@ -7,7 +7,7 @@ class DashboardController < ApplicationController
   end
 
   def export
-    @exports = current_user.exports
+    @exports = current_user.exports.order(date: :desc)
   end
 
 end

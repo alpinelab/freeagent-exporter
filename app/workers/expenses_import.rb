@@ -28,26 +28,38 @@ class ExpensesImport
     nil
   end
 
+  def download_and_add_to_zip(zipfile, filename, url)
+    full_path = "#{@root_path}/#{filename}"
+    open(full_path, 'wb') do |file|
+      file << open(url).read
+    end
+    zipfile.add(filename, full_path)
+  end
+
   def create_zipfile_from_bank_transactions_attachments(filename, bank_transactions)
     Zip::File.open("#{@root_path}/#{filename}", Zip::File::CREATE) do |zipfile|
       bank_transactions.each do |bt|
-        explanation = FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations.first
-        if explanation['attachment']
-          filename = explanation['attachment']['file_name']
-          full_path = "#{@root_path}/#{filename}"
-          open(full_path, 'wb') do |file|
-            file << open(explanation['attachment']['content_src']).read
-          end
-          zipfile.add(filename, full_path)
-        end
+        explanation = FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations
+
+        download_and_add_to_zip(
+          zipfile,
+          explanation.attachment.file_name,
+          explanation.attachment.content_src) if explanation.attachment
+
+        download_and_add_to_zip(
+          zipfile,
+          explanation.paid_bill.attachment.file_name,
+          explanation.paid_bill.attachment.content_src) if explanation.paid_bill
+
       end
     end
   end
 
   def perform(name, count)
     date = (Date.today - 2.years).at_beginning_of_month
+
     loop do
-      FileUtils.rm_rf(Dir.glob("#{@root_path}/*")) #clean the temps folder
+      FileUtils.rm_rf(Dir.glob("#{@root_path}/*")) #clean the temp folder
       unexplained = 0
       bank_transactions = FreeAgent::BankTransaction.find_all_by_bank_account(ENV['FREEAGENT_BANK_ACCOUNT_ID'], { from_date: date, to_date: date.at_end_of_month })
 
