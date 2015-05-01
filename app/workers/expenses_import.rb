@@ -28,28 +28,21 @@ class ExpensesImport
     nil
   end
 
-  def download_and_add_to_zip(zipfile, filename, url)
-    full_path = "#{@root_path}/#{filename}"
+  def attachment_into_zip(zipfile, attachment)
+    full_path = "#{@root_path}/#{attachment.file_name}"
     open(full_path, 'wb') do |file|
-      file << open(url).read
+      file << open(attachment.content_src).read
     end
-    zipfile.add(filename, full_path)
+    zipfile.add(attachment.file_name, full_path)
   end
 
-  def create_zipfile_from_bank_transactions_attachments(filename, bank_transactions)
+  def create_zipfile_from_attachments(filename, bank_transactions)
     Zip::File.open("#{@root_path}/#{filename}", Zip::File::CREATE) do |zipfile|
       bank_transactions.each do |bt|
         explanation = FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations
 
-        download_and_add_to_zip(
-          zipfile,
-          explanation.attachment.file_name,
-          explanation.attachment.content_src) if explanation.attachment
-
-        download_and_add_to_zip(
-          zipfile,
-          explanation.paid_bill.attachment.file_name,
-          explanation.paid_bill.attachment.content_src) if explanation.paid_bill
+        attachment_into_zip zipfile, explanation.attachment if explanation.attachment
+        attachment_into_zip zipfile, explanation.paid_bill.attachment if explanation.paid_bill
 
       end
     end
@@ -72,7 +65,7 @@ class ExpensesImport
 
       if unexplained == 0 && bank_transactions.length > 0
         filename = "#{date.to_s(:month_and_year_file)}.zip"
-        create_zipfile_from_bank_transactions_attachments filename, bank_transactions
+        create_zipfile_from_attachments filename, bank_transactions
         url = upload_file filename
         export.update_attributes(s3_url: url) if url
       end
