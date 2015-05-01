@@ -1,5 +1,5 @@
 require 'freeagent'
-require 'zip'
+require 'zip/filesystem'
 require 'open-uri'
 require 'fileutils'
 
@@ -17,7 +17,6 @@ class ExpensesImport
         access_token: @user.access_token
       )
     FreeAgent.environment = ENV['FREEAGENT_ENV'].to_sym
-
     FileUtils.mkdir_p(@root_path)
   end
 
@@ -28,22 +27,20 @@ class ExpensesImport
     nil
   end
 
-  def attachment_into_zip(zipfile, attachment)
-    full_path = "#{@root_path}/#{attachment.file_name}"
-    open(full_path, 'wb') do |file|
+  def attachment_into_zip(zipfile, attachment, folder)
+    zipfile.file.open("#{folder}/#{attachment.file_name}", "w") do |file|
       file << open(attachment.content_src).read
     end
-    zipfile.add(attachment.file_name, full_path)
   end
 
   def create_zipfile_from_attachments(filename, bank_transactions)
     Zip::File.open("#{@root_path}/#{filename}", Zip::File::CREATE) do |zipfile|
+      zipfile.dir.mkdir("bank_transactions")
       bank_transactions.each do |bt|
         explanation = FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations
 
-        attachment_into_zip zipfile, explanation.attachment if explanation.attachment
-        attachment_into_zip zipfile, explanation.paid_bill.attachment if explanation.paid_bill
-
+        attachment_into_zip zipfile, explanation.attachment, 'bank_transactions' if explanation.attachment
+        attachment_into_zip zipfile, explanation.paid_bill.attachment, 'bank_transactions' if explanation.paid_bill
       end
     end
   end
@@ -54,7 +51,9 @@ class ExpensesImport
     loop do
       FileUtils.rm_rf(Dir.glob("#{@root_path}/*")) #clean the temp folder
       unexplained = 0
-      bank_transactions = FreeAgent::BankTransaction.find_all_by_bank_account(ENV['FREEAGENT_BANK_ACCOUNT_ID'], { from_date: date, to_date: date.at_end_of_month })
+      bank_transactions = FreeAgent::BankTransaction.find_all_by_bank_account(
+        ENV['FREEAGENT_BANK_ACCOUNT_ID'],
+        { from_date: date, to_date: date.at_end_of_month })
 
       puts "#{date} got #{bank_transactions.length} bank_transactions"
 
