@@ -10,7 +10,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
+  config.mailer_sender = 'freeagent-export@alpine-lab.com'
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
@@ -140,7 +140,7 @@ Devise.setup do |config|
 
   # ==> Configuration for :validatable
   # Range for password length.
-  config.password_length = 8..128
+  config.password_length = 8..256
 
   # Email regex used to validate email formats. It simply asserts that
   # one (and only one) @ exists in the given string. This is mainly
@@ -257,7 +257,9 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
 
-  config.omniauth :freeagent, ENV['FREEAGENT_ID'], ENV['FREEAGENT_SECRET'], { environment: ENV['FREEAGENT_ENV'].to_sym }
+  config.omniauth :freeagent, Rails.application.secrets.freeagent_id, Rails.application.secrets.freeagent_secret, { environment: Rails.application.secrets.freeagent_env.to_sym }
 
-  OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+  silence_warnings do
+    OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE unless Rails.env.production?
+  end
 end
