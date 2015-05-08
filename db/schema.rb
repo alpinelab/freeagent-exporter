@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150501094055) do
+ActiveRecord::Schema.define(version: 20150508154346) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "exports", force: true do |t|
+  create_table "archives", force: true do |t|
     t.string   "name"
     t.text     "s3_url"
     t.datetime "created_at"
@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20150501094055) do
     t.integer  "n_to_explain"
   end
 
-  add_index "exports", ["user_id"], name: "index_exports_on_user_id", using: :btree
+  add_index "archives", ["user_id"], name: "index_archives_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

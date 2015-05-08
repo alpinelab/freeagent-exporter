@@ -7,7 +7,7 @@ class ExpensesImport
   include Sidekiq::Worker
 
   def initialize
-    @root_path = Rails.root.join('tmp', 'exports')
+    @root_path = Rails.root.join('tmp', 'archives')
     @s3 = Aws::S3::Resource.new
     @user = User.first
     raise "User not found" if @user.nil?
@@ -70,14 +70,14 @@ class ExpensesImport
 
       bank_transactions.each { |bt| unexplained += 1 if bt.unexplained_amount != 0 }
 
-      export = Export.find_or_create_by(user: @user, date: date)
-      export.update_attributes(n_to_explain: unexplained, name: date.to_s(:month_and_year))
+      archive = Archive.find_or_create_by(user: @user, date: date)
+      archive.update_attributes(n_to_explain: unexplained, name: date.to_s(:month_and_year))
 
       if unexplained == 0 && bank_transactions.length > 0
         filename = "#{date.to_s(:month_and_year_file)}.zip"
         create_zipfile_from_attachments filename, bank_transactions, expenses
         url = upload_file filename
-        export.update_attributes(s3_url: url) if url
+        archive.update_attributes(s3_url: url) if url
       end
 
       break if date > Date.today.at_end_of_month

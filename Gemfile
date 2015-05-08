@@ -12,8 +12,6 @@ gem 'coffee-rails', '~> 4.0'
 gem 'jquery-rails'
 gem 'sidekiq'
 gem 'sinatra', :require => nil
-gem 'rspec-rails'
-gem 'capybara'
 gem 'haml-rails'
 gem 'dotenv-rails', :groups => [:development, :test]
 
@@ -25,10 +23,15 @@ gem 'rubyzip'
 gem 'aws-sdk', '~> 2'
 gem 'gravatar_image_tag'
 
-group :production do
-  gem 'rails_12factor'
-end
-
 group :development do
   gem 'spring'
+end
+
+group :test do
+  gem 'rspec-rails', '~> 3.0'
+  gem 'capybara'
+end
+
+group :production do
+  gem 'rails_12factor'
 end
