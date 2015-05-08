@@ -1,0 +1,4 @@
+= puts flash.inspect
+- flash.each do |level, message|
+  .alert{class: flash_class(level)}
+    = message

@@ -22,6 +22,7 @@ gem 'omniauth-freeagent', github: 'jasiek/omniauth-freeagent'
 gem 'freeagent-api-ruby', github: 'alpinelab/freeagent-api-ruby', branch: 'master'
 gem 'rubyzip'
 gem 'aws-sdk', '~> 2'
+gem 'gravatar_image_tag'
 
 group :production do
   gem 'rails_12factor'
