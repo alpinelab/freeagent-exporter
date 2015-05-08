@@ -12,8 +12,9 @@ gem 'coffee-rails', '~> 4.0'
 gem 'jquery-rails'
 gem 'sidekiq'
 gem 'sinatra', :require => nil
-gem 'rspec'
-gem 'haml'
+gem 'rspec-rails'
+gem 'capybara'
+gem 'haml-rails'
 gem 'dotenv-rails', :groups => [:development, :test]
 
 gem 'oauth2'
