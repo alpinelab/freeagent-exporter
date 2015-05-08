@@ -7,13 +7,13 @@ class ExpensesImport
   include Sidekiq::Worker
 
   def initialize
-    @root_path = Rails.root.join('tmp', 'worker')
+    @root_path = Rails.root.join('tmp', 'exports')
     @s3 = Aws::S3::Resource.new
     @user = User.first
     raise "User not found" if @user.nil?
     FreeAgent.access_details(
-        ENV['FREEAGENT_ID'],
-        ENV['FREEAGENT_SECRET'],
+        Rails.application.secrets.freeagent_id,
+        Rails.application.secrets.freeagent_secret,
         access_token: @user.access_token
       )
     FreeAgent.environment = ENV['FREEAGENT_ENV'].to_sym
@@ -21,7 +21,7 @@ class ExpensesImport
   end
 
   def upload_file(filename)
-    obj = @s3.bucket(ENV['AWS_BUCKET']).object("#{@user.id}/#{filename}")
+    obj = @s3.bucket(Rails.application.secrets.aws_s3_bucket_name).object("#{@user.id}/#{filename}")
     return obj.presigned_url(:get, expires_in: 604800).to_s if obj.upload_file("#{@root_path}/#{filename}")
 
     nil
