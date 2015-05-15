@@ -21,5 +21,9 @@ module FreeagentExporter
     # config.i18n.default_locale = :de
 
     config.sass.preferred_syntax = :sass
+
+    config.generators do |g|
+      g.test_framework :rspec
+    end
   end
 end
