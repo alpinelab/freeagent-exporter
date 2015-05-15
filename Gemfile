@@ -28,6 +28,7 @@ group :development do
 end
 
 group :test do
+  gem 'codeclimate-test-reporter', require: nil
   gem 'rspec-rails', '~> 3.0'
   gem 'shoulda-matchers'
   gem 'capybara'
