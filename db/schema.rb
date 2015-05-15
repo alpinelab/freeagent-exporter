@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150508154346) do
+ActiveRecord::Schema.define(version: 20150515102613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,12 +21,26 @@ ActiveRecord::Schema.define(version: 20150508154346) do
     t.text     "s3_url"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_id"
+    t.integer  "bank_account_id"
     t.datetime "date"
     t.integer  "n_to_explain"
   end
 
-  add_index "archives", ["user_id"], name: "index_archives_on_user_id", using: :btree
+  add_index "archives", ["bank_account_id"], name: "index_archives_on_bank_account_id", using: :btree
+
+  create_table "bank_accounts", force: true do |t|
+    t.string   "number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "bank_accounts_users", id: false, force: true do |t|
+    t.integer "bank_account_id"
+    t.integer "user_id"
+  end
+
+  add_index "bank_accounts_users", ["bank_account_id"], name: "index_bank_accounts_users_on_bank_account_id", using: :btree
+  add_index "bank_accounts_users", ["user_id"], name: "index_bank_accounts_users_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

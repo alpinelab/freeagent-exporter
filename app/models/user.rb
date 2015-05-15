@@ -1,7 +1,8 @@
 class User < ActiveRecord::Base
   devise :omniauthable, :omniauth_providers => [:freeagent]
 
-  has_many :archives
+  has_and_belongs_to_many :bank_accounts
+  has_many :archives, through: :bank_accounts
 
   def self.from_omniauth(auth)
     p auth

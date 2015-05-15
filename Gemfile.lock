@@ -201,6 +201,8 @@ GEM
       sprockets (~> 2.8, < 3.0)
       sprockets-rails (~> 2.0)
     sexp_processor (4.5.1)
+    shoulda-matchers (2.8.0)
+      activesupport (>= 3.0.0)
     sidekiq (3.3.4)
       celluloid (>= 0.16.0)
       connection_pool (>= 2.1.1)
@@ -259,6 +261,7 @@ DEPENDENCIES
   rspec-rails (~> 3.0)
   rubyzip
   sass-rails (~> 4.0)
+  shoulda-matchers
   sidekiq
   sinatra
   spring
