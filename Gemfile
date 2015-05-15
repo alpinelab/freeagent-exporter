@@ -18,7 +18,7 @@ gem 'dotenv-rails', :groups => [:development, :test]
 gem 'oauth2'
 gem 'devise'
 gem 'omniauth-freeagent', github: 'jasiek/omniauth-freeagent'
-gem 'freeagent-api-ruby', github: 'alpinelab/freeagent-api-ruby', branch: 'master'
+gem 'freeagent-api-ruby', github: 'alpinelab/freeagent-api-ruby', branch: 'master', require: 'freeagent'
 gem 'rubyzip'
 gem 'aws-sdk', '~> 2'
 gem 'gravatar_image_tag'
