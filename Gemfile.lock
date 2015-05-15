@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/alpinelab/freeagent-api-ruby.git
-  revision: b07fdb06de5ef3a4b8c1aa51e9f9fd2128e5dcf7
+  revision: 4b40c52f63a212be1f55314475f748bcd8e14845
   branch: master
   specs:
     freeagent-api-ruby (0.0.1)
