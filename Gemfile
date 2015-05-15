@@ -13,7 +13,6 @@ gem 'jquery-rails'
 gem 'sidekiq'
 gem 'sinatra', :require => nil
 gem 'haml-rails'
-gem 'dotenv-rails', :groups => [:development, :test]
 
 gem 'oauth2'
 gem 'devise'
@@ -25,6 +24,11 @@ gem 'gravatar_image_tag'
 
 group :development do
   gem 'spring'
+end
+
+group :development, :test do
+  gem 'dotenv-rails'
+  gem 'pry-rails'
 end
 
 group :test do
