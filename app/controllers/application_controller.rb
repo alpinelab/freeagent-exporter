@@ -10,6 +10,6 @@ private
       Rails.application.secrets.freeagent_id,
       Rails.application.secrets.freeagent_secret,
       access_token: current_user.access_token
-    )
+    ) unless current_user.nil?
   end
 end
