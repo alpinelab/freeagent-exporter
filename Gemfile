@@ -36,6 +36,7 @@ group :test do
   gem 'rspec-rails', '~> 3.0'
   gem 'shoulda-matchers'
   gem 'capybara'
+  gem 'webmock'
 end
 
 group :production do
