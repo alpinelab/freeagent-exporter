@@ -1,22 +1,27 @@
 class BankAccountsController < ApplicationController
   def index
-    @tracked_accounts = current_user.bank_accounts
-    @bank_accounts    = FreeAgent::BankAccount.all
+    @freeagent_bank_accounts = FreeAgent::BankAccount.all
   end
 
   def create
-    bank_account = BankAccount.create!(bank_account_params)
-    current_user.bank_accounts << bank_account
-    flash[:success] = "Bank account successfully tracked"
-  rescue StandardError => e
-    flash[:error] = "Error: #{e.message}"
-  ensure
+    bank_account = BankAccount.find_or_create_by(bank_account_params)
+    if bank_account.persisted?
+      current_user.bank_accounts << bank_account
+      flash[:success] = "Bank account successfully tracked"
+    else
+      flash[:error] = "Error: #{bank_account.errors.full_messages}"
+    end
     redirect_to bank_accounts_path
   end
 
   def destroy
-    current_user.bank_accounts.delete(params[:id])
-    flash[:success] = "Bank account successfully untracked"
+    bank_account = current_user.bank_accounts.find_by(id: params[:id])
+    if bank_account.present?
+      bank_account.destroy
+      flash[:success] = "Bank account successfully untracked"
+    else
+      flash[:error] = "Could not find bank account"
+    end
     redirect_to bank_accounts_path
   end
 

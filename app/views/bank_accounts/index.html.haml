@@ -1,13 +1,12 @@
 %h1 BankAccounts
 
-%h2 Bank accounts
 %table.table.table-hover
   %tr
     %th Name
     %th Number
     %th Current balance
     %th Tracked ?
-  - @bank_accounts.each do |account|
+  - @freeagent_bank_accounts.each do |account|
     %tr
       %td= account.name
       %td= account.account_number
