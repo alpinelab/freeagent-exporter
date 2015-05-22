@@ -1,5 +1,7 @@
 require "codeclimate-test-reporter"
-CodeClimate::TestReporter.start
+CodeClimate::TestReporter.start do
+  add_filter "/config/initializers/"
+end
 
 require 'webmock/rspec'
 WebMock.disable_net_connect! allow: %w{codeclimate.com pullreview.com}
