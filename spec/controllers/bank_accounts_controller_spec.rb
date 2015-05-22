@@ -12,31 +12,61 @@ describe BankAccountsController, type: :controller do
   describe "GET #index" do
     let(:freeagent_bank_accounts) { [FreeAgent::BankAccount.new, FreeAgent::BankAccount.new] }
 
+    subject { get :index }
+
     it "sets @freeagent_bank_accounts" do
       expect(FreeAgent::BankAccount).to receive(:all).and_return(freeagent_bank_accounts)
-      get :index
+      subject
       expect(assigns(:freeagent_bank_accounts)).to match_array freeagent_bank_accounts
     end
 
     it "renders index view" do
-      expect(get :index).to render_template :index
+      expect(subject).to render_template :index
     end
 
     it "returns http success" do
-      expect(get :index).to have_http_status(:success)
+      expect(subject).to have_http_status(:success)
     end
 
     context "when user is not logged in" do
       before { sign_out user }
 
       it "redirects to root page" do
-        expect(get :index).to redirect_to root_path
+        expect(subject).to redirect_to root_path
       end
     end
   end
 
   describe "POST #create" do
-    it "should be tested"
+    subject { post :create, freeagent_id: 42, name: 'Current account', number: '1234abcdef' }
+
+    context "when the bank account already exists" do
+      it "attaches it to the current user" do
+        expect{ subject }.to change{user.bank_accounts.count}.by(1)
+      end
+    end
+
+    context "when the bank account does not exist yet" do
+      context "when it can be created" do
+        it "creates it" do
+          expect{ subject }.to change{BankAccount.count}.by(1)
+        end
+
+        it "sets a flash success message" do
+          subject
+          expect(flash[:success]).to_not be_nil
+        end
+      end
+
+      context "when it cannot be created" do
+        before { allow(BankAccount).to receive(:find_or_create_by).and_return(BankAccount.new) }
+
+        it "sets an error flash message" do
+          subject
+          expect(flash[:error]).to_not be_nil
+        end
+      end
+    end
 
     it "redirects to bank accounts index page" do
       expect(post :create).to redirect_to bank_accounts_path
@@ -55,13 +85,15 @@ describe BankAccountsController, type: :controller do
     let(:user)         { User.create! access_token: '12345abc', bank_accounts: [bank_account] }
     let(:bank_account) { BankAccount.create! }
 
+    subject { delete :destroy, id: bank_account.id }
+
     context "when given bank account belongs to current user" do
       it "destroys the given bank account" do
-        expect{ delete :destroy, id: bank_account.id }.to change{BankAccount.count}.by(-1)
+        expect{ subject }.to change{BankAccount.count}.by(-1)
       end
 
       it "sets a success flash message" do
-        delete :destroy, id: bank_account.id
+        subject
         expect(flash[:success]).to_not be_nil
       end
     end
@@ -72,17 +104,17 @@ describe BankAccountsController, type: :controller do
       before { bank_account }
 
       it "does not destroy given account" do
-        expect{ delete :destroy, id: bank_account.id }.to_not change{BankAccount.count}
+        expect{ subject }.to_not change{BankAccount.count}
       end
 
       it "sets an error flash message" do
-        delete :destroy, id: bank_account.id
+        subject
         expect(flash[:error]).to_not be_nil
       end
     end
 
     it "redirects to bank accounts index page" do
-      delete :destroy, id: bank_account.id
+      subject
       expect(response).to redirect_to bank_accounts_path
     end
 
@@ -90,7 +122,7 @@ describe BankAccountsController, type: :controller do
       before { sign_out user }
 
       it "redirects to root page" do
-        expect(delete :destroy, id: 123).to redirect_to root_path
+        expect(subject).to redirect_to root_path
       end
     end
   end
