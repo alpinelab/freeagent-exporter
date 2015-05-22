@@ -1,0 +1,23 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Thu, 21 May 2015 08:32:39 GMT
+Content-Type: application/json; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Status: 200 OK
+Link: 
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: DELETE, GET, HEAD, OPTIONS, POST, PUT
+Access-Control-Allow-Headers: Accept, Authorization, Content-Type
+Access-Control-Expose-Headers: Link
+Access-Control-Max-Age: 1728000
+X-UA-Compatible: IE=Edge,chrome=1
+ETag: "3ec7daf7c47ef7dccb46e24b1e45e3a2"
+Cache-Control: max-age=0, private, must-revalidate
+X-Request-Id: fba95c61b99a5a19c655ae64b70c1dab
+X-Runtime: 0.110530
+X-Rev: 6cff40
+X-Host: web1
+X-Content-Type-Options: nosniff
+
+{"bank_accounts":[{"url":"https://api.sandbox.freeagent.com/v2/bank_accounts/1406","opening_balance":"100000.0","bank_name":"Credit Agricole","type":"StandardBankAccount","name":"Compte courant","is_personal":false,"is_primary":true,"currency":"EUR","current_balance":"90914.69","account_number":"123456789","updated_at":"2015-05-15T14:38:43Z","created_at":"2015-05-08T11:21:13Z"},{"url":"https://api.sandbox.freeagent.com/v2/bank_accounts/1407","opening_balance":"0.0","bank_name":"Credit Agricole","type":"StandardBankAccount","name":"Provisions","is_personal":false,"is_primary":false,"currency":"EUR","current_balance":"27667.65","account_number":"987654321","updated_at":"2015-05-08T11:22:24Z","created_at":"2015-05-08T11:21:57Z"}]}

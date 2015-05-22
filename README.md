@@ -13,6 +13,19 @@ Freeagent Exporter conects to your FreeAgent account and lets you download month
 - [ ] Expenses
 - [ ] Invoices
 
+## Recording API responses for stubbing
+
+Example to stub `FreeAgent::BankAccount.all`:
+```
+curl -is -H 'Authorization: Bearer FREEAGENT_ACCESS_TOKEN' -H 'Accept: application/json' -H 'Content-Type: application/json' -H 'User-Agent: freeagent-api-rb' "https://api.sandbox.freeagent.com/v2/bank_accounts" > spec/api_responses/bank_account_all.json.http
+```
+
+Then, in the spec:
+```
+stub_request(:get, Regexp.new("https://api.sandbox.freeagent.com/v2/bank_accounts.*")).
+  to_return(File.new('spec/api_responses/bank_account_all.json.http'))
+```
+
 ## License
 
 Released under the MIT license, see `LICENSE.md` for full license text
