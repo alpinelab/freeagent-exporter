@@ -5,17 +5,8 @@ class User < ActiveRecord::Base
   has_many :archives, through: :bank_accounts
 
   def self.from_omniauth(auth)
-    where(provider: auth.provider, uid: auth.uid.to_s).first_or_create do |user|
-      user.email = auth.info.email
-      user.access_token = auth.credentials.token
-    end
-  end
-
-  def self.new_with_session(params, session)
-    super.tap do |user|
-      if data = session["devise.freeagent_data"] && session["devise.freeagent_data"]["extra"]["raw_info"]
-        user.email = data["email"] if user.email.blank?
-      end
-    end
+    user = where(provider: auth.provider, uid: auth.uid.to_s).first_or_create!(email: auth.info.email)
+    user.update_attributes!(access_token: auth.credentials.token)
+    user
   end
 end
