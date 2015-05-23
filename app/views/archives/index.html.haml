@@ -1,19 +1,21 @@
 %h1 Archives
 
-.row
-  %table.table.table-hover
-    %thead
-      %tr
-        %th #
-        %th Name
-        %th Month
-        %th Number left to explain
-        %th Download
-    %tbody
-      - @archives.each do |archive|
+- @archives.each do |account, archives|
+  %h2= "#{account.name} (#{account.number})"
+  .row
+    %table.table.table-hover
+      %thead
         %tr
-          %td= archive.id
-          %td= archive.name
-          %td= archive.date
-          %td= archive.n_to_explain
-          %td= link_to "Download Archive", archive.s3_url if archive.s3_url
+          %th #
+          %th Name
+          %th Month
+          %th Number left to explain
+          %th Download
+      %tbody
+        - archives.each do |archive|
+          %tr
+            %td= archive.id
+            %td= archive.name
+            %td= archive.date
+            %td= archive.n_to_explain
+            %td= link_to "Download Archive", archive.s3_url if archive.s3_url
