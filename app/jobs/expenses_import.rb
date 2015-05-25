@@ -51,18 +51,18 @@ class ExpensesImport
     archive = Archive.find(archive_id)
     raise "archive not found" if archive.nil?
 
+    unexplained = 0
     date = archive.date.at_beginning_of_month
     @bank_account = archive.bank_account
     @user = @bank_account.users.first
-    raise "User not found" if @user.nil?
+
     FreeAgent.access_details(
-        Rails.application.secrets.freeagent_id,
-        Rails.application.secrets.freeagent_secret,
-        access_token: @user.access_token
-      )
+      Rails.application.secrets.freeagent_id,
+      Rails.application.secrets.freeagent_secret,
+      access_token: @user.access_token
+    )
 
     FileUtils.rm_rf(Dir.glob("#{@root_path}/*")) #clean the temp folder
-    unexplained = 0
 
     bank_transactions = FreeAgent::BankTransaction.find_all_by_bank_account(
       ENV['FREEAGENT_BANK_ACCOUNT_ID'],
