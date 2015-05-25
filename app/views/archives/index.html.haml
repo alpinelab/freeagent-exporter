@@ -15,4 +15,4 @@
           %td= archive.name
           %td= archive.date
           %td= archive.n_to_explain
-          %td= link_to "Download Archive", archive.s3_url if archive.s3_url
+          %td= link_to_archive_or_generate archive

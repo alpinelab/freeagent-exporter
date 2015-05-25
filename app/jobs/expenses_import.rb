@@ -47,10 +47,12 @@ class ExpensesImport
     end
   end
 
-  def perform(bank_account_id, year_month)
-    date = year_month.to_date.at_beginning_of_month
+  def perform(archive_id)
+    archive = Archive.find(archive_id)
+    raise "archive not found" if archive.nil?
 
-    @bank_account =  BankAccount.find(bank_account_id)
+    date = archive.date.at_beginning_of_month
+    @bank_account = archive.bank_account
     @user = @bank_account.users.first
     raise "User not found" if @user.nil?
     FreeAgent.access_details(
@@ -72,7 +74,6 @@ class ExpensesImport
 
     bank_transactions.each { |bt| unexplained += 1 if bt.unexplained_amount != 0 }
 
-    archive = Archive.find_or_create_by(bank_account: @bank_account, date: date)
     archive.update_attributes(n_to_explain: unexplained, name: date.to_s(:month_and_year))
 
     if unexplained == 0 && bank_transactions.length > 0

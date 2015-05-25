@@ -1,7 +1,7 @@
 class ArchivesController < ApplicationController
   def index
     @year = params[:year] || Date.today.year
-    @account = params[:account].present? ? BankAccount.find(params[:account]) : current_user.bank_accounts.first
+    @account = params[:account].present? ? current_user.bank_accounts.find(params[:account]) : current_user.bank_accounts.first
     @archives = Array.new(12) do |month|
       Archive.find_or_create_by(
         bank_account: @account,
@@ -10,7 +10,10 @@ class ArchivesController < ApplicationController
     end
   end
 
-  def generate
-
+  def update
+    #TODO: check if archive belong to user
+    archive = Archive.find(params[:id])
+    ExpensesImport.perform_async(archive.id)
+    redirect_to archives_path
   end
 end
