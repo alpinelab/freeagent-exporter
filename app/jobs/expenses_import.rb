@@ -9,13 +9,7 @@ class ExpensesImport
   def initialize
     @root_path = Rails.root.join('tmp', 'archives')
     @s3 = Aws::S3::Resource.new
-    @user = User.first
-    raise "User not found" if @user.nil?
-    FreeAgent.access_details(
-        Rails.application.secrets.freeagent_id,
-        Rails.application.secrets.freeagent_secret,
-        access_token: @user.access_token
-      )
+
     FreeAgent.environment = ENV['FREEAGENT_ENV'].to_sym
     FileUtils.mkdir_p(@root_path)
   end
@@ -53,36 +47,39 @@ class ExpensesImport
     end
   end
 
-  def perform(name, count)
-    date = (Date.today - 2.years).at_beginning_of_month
+  def perform(bank_account_id, year_month)
+    date = year_month.to_date.at_beginning_of_month
 
-    loop do
-      FileUtils.rm_rf(Dir.glob("#{@root_path}/*")) #clean the temp folder
-      unexplained = 0
+    @bank_account =  BankAccount.find(bank_account_id)
+    @user = @bank_account.users.first
+    raise "User not found" if @user.nil?
+    FreeAgent.access_details(
+        Rails.application.secrets.freeagent_id,
+        Rails.application.secrets.freeagent_secret,
+        access_token: @user.access_token
+      )
 
-      bank_transactions = FreeAgent::BankTransaction.find_all_by_bank_account(
-        ENV['FREEAGENT_BANK_ACCOUNT_ID'],
-        { from_date: date, to_date: date.at_end_of_month })
-      expenses = FreeAgent::Expense.filter(
-        { from_date: date, to_date: date.at_end_of_month })
+    FileUtils.rm_rf(Dir.glob("#{@root_path}/*")) #clean the temp folder
+    unexplained = 0
 
-      puts "#{date} got #{bank_transactions.length} bank_transactions and #{expenses.length} expenses"
+    bank_transactions = FreeAgent::BankTransaction.find_all_by_bank_account(
+      ENV['FREEAGENT_BANK_ACCOUNT_ID'],
+      { from_date: date, to_date: date.at_end_of_month })
+    expenses = FreeAgent::Expense.filter(
+      { from_date: date, to_date: date.at_end_of_month })
 
-      bank_transactions.each { |bt| unexplained += 1 if bt.unexplained_amount != 0 }
+    puts "#{date} got #{bank_transactions.length} bank_transactions and #{expenses.length} expenses"
 
-      archive = Archive.find_or_create_by(user: @user, date: date)
-      archive.update_attributes(n_to_explain: unexplained, name: date.to_s(:month_and_year))
+    bank_transactions.each { |bt| unexplained += 1 if bt.unexplained_amount != 0 }
 
-      if unexplained == 0 && bank_transactions.length > 0
-        filename = "#{date.to_s(:month_and_year_file)}.zip"
-        create_zipfile_from_attachments filename, bank_transactions, expenses
-        url = upload_file filename
-        archive.update_attributes(s3_url: url) if url
-      end
+    archive = Archive.find_or_create_by(bank_account: @bank_account, date: date)
+    archive.update_attributes(n_to_explain: unexplained, name: date.to_s(:month_and_year))
 
-      break if date > Date.today.at_end_of_month
-      date = date.next_month
+    if unexplained == 0 && bank_transactions.length > 0
+      filename = "#{date.to_s(:month_and_year_file)}.zip"
+      create_zipfile_from_attachments filename, bank_transactions, expenses
+      url = upload_file filename
+      archive.update_attributes(s3_url: url) if url
     end
-
   end
 end
