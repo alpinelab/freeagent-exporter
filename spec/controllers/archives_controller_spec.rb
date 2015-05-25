@@ -10,7 +10,7 @@ describe ArchivesController, "#index", type: :controller do
 
     it "sets @archives" do
       get :index
-      expect(assigns[:archives]).to match_array archives
+      expect(assigns[:archives][bank_account]).to match_array archives
     end
 
     it "renders index view" do
