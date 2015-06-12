@@ -3,9 +3,7 @@ class ArchivesController < ApplicationController
   before_action :find_archive, only: :update
 
   def index
-    @archives = Array.new(12) do |month|
-      Archive.find_or_create_by(bank_account: @account, year: @year, month: month + 1)
-    end
+    @archives = Array.new(12) { |month| Archive.find_or_create_by(bank_account: @account, year: @year, month: month + 1) }
   end
 
   def update
