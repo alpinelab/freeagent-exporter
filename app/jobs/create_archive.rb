@@ -3,7 +3,7 @@ require 'zip/filesystem'
 require 'open-uri'
 require 'fileutils'
 
-class ExpensesImport
+class CreateArchive
   include Sidekiq::Worker
 
   attr_reader :archive_id

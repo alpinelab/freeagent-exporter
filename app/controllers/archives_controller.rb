@@ -10,7 +10,7 @@ class ArchivesController < ApplicationController
 
   def update
     #TODO: check if archive belong to user
-    ExpensesImport.perform_async(@archive.id)
+    CreateArchive.perform_async(@archive.id)
     redirect_to archives_path
   end
 
