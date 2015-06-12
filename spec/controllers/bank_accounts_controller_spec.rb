@@ -4,7 +4,7 @@ describe BankAccountsController, type: :controller do
   let(:user) { User.create! access_token: '12345abc' }
 
   before do
-    stub_request(:get, Regexp.new("https://api.sandbox.freeagent.com/v2/bank_accounts.*")).
+    stub_request(:get, Regexp.new("https://api.*freeagent.com/v2/bank_accounts.*")).
       to_return(File.new('spec/api_responses/bank_account_all.json.http'))
     sign_in user
   end
