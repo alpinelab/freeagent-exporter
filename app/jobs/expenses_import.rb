@@ -65,7 +65,7 @@ class ExpensesImport
     FileUtils.rm_rf(Dir.glob("#{@root_path}/*")) #clean the temp folder
 
     bank_transactions = FreeAgent::BankTransaction.find_all_by_bank_account(
-      ENV['FREEAGENT_BANK_ACCOUNT_ID'],
+      @bank_account.freeagent_id,
       { from_date: date, to_date: date.at_end_of_month })
     expenses = FreeAgent::Expense.filter(
       { from_date: date, to_date: date.at_end_of_month })
