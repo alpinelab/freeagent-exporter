@@ -1,5 +1,6 @@
 class ArchivesController < ApplicationController
-  before_action :find_year, :find_account
+  before_action :find_year, :find_account, only: :index
+  before_action :find_archive, only: :update
 
   def index
     @archives = Array.new(12) do |month|
@@ -9,12 +10,15 @@ class ArchivesController < ApplicationController
 
   def update
     #TODO: check if archive belong to user
-    archive = Archive.find(params[:id])
-    ExpensesImport.perform_async(archive.id)
+    ExpensesImport.perform_async(@archive.id)
     redirect_to archives_path
   end
 
   private
+
+  def find_archive
+    @archive = Archive.find(params[:id])
+  end
 
   def find_year
     @year = (params[:year] || Date.today.year).to_i
