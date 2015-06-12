@@ -4,13 +4,13 @@ describe ArchivesController, "#index", type: :controller do
   context "when user is logged in" do
     let(:user)         { User.create! bank_accounts: [bank_account] }
     let(:bank_account) { BankAccount.create! archives: archives }
-    let(:archives)     { [Archive.create!, Archive.create!] }
+    let(:archives)     { (1..12).map { |month| Archive.create(year: Date.today.year, month: month) }}
 
     before { sign_in user }
 
     it "sets @archives" do
       get :index
-      expect(assigns[:archives][bank_account]).to match_array archives
+      expect(assigns[:archives]).to match_array archives
     end
 
     it "renders index view" do
