@@ -4,7 +4,7 @@ class ArchivesController < ApplicationController
 
   def index
     @archives = Array.new(12) do |month|
-      Archive.find_or_create_by(bank_account: @account, date: Date.new(@year, month+1, 01))
+      Archive.find_or_create_by(bank_account: @account, date: Date.new(@year, month + 1, 01))
     end
   end
 
@@ -18,6 +18,7 @@ class ArchivesController < ApplicationController
 
   def find_archive
     @archive = Archive.find(params[:id])
+    redirect_to archives_path if @archive.nil?
   end
 
   def find_year
@@ -26,6 +27,6 @@ class ArchivesController < ApplicationController
 
   def find_account
     @account = params[:account].present? ? current_user.bank_accounts.find(params[:account]) : current_user.bank_accounts.first
-    redirect_to bank_accounts_path if @account.nil?
+    redirect_to bank_accounts_path, notice: "Please, track at least one bank account" if @account.nil?
   end
 end
