@@ -4,7 +4,7 @@ describe ArchivesController, "#index", type: :controller do
   context "when user is logged in" do
     let(:user)         { User.create! bank_accounts: [bank_account] }
     let(:bank_account) { BankAccount.create! archives: archives }
-    let(:archives)     { Array.new(12) { |month| Archive.create(year: Date.today.year, month: month + 1) }}
+    let(:archives)     { (1..12).map { |month| Archive.create(year: Date.today.year, month: month) }}
 
     before { sign_in user }
 
