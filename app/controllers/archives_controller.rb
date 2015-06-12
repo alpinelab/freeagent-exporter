@@ -17,7 +17,7 @@ class ArchivesController < ApplicationController
   private
 
   def find_archive
-    @archive = Archive.find(params[:id])
+    @archive = Archive.find_by(id: params[:id])
     redirect_to archives_path if @archive.nil?
   end
 

@@ -4,7 +4,6 @@
     %thead
       %tr
         %th #
-        %th Name
         %th Month
         %th Number left to explain
         %th Download
@@ -12,7 +11,6 @@
     - @archives.each do |archive|
       %tr
         %td= archive.id
-        %td= archive.name
-        %td= archive.date
-        %td= archive.n_to_explain
+        %td= archive.start_date
+        %td= archive.transactions_left_to_explain
         %td= link_to_archive_or_generate archive

@@ -6,6 +6,7 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+
 module FreeagentExporter
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
@@ -25,5 +26,7 @@ module FreeagentExporter
     config.generators do |g|
       g.test_framework :rspec
     end
+    config.autoload_paths << Rails.root.join('lib')
+
   end
 end
