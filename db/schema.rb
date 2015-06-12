@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150515145858) do
+ActiveRecord::Schema.define(version: 20150612135510) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,8 +22,9 @@ ActiveRecord::Schema.define(version: 20150515145858) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "bank_account_id"
-    t.datetime "date"
     t.integer  "n_to_explain"
+    t.integer  "month"
+    t.integer   "year"
   end
 
   add_index "archives", ["bank_account_id"], name: "index_archives_on_bank_account_id", using: :btree
