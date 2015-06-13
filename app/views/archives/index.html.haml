@@ -1,16 +1,8 @@
-%h1 Archives
+%h1= "Archives #{@year}"
 .row
   %table.table.table-hover
-    %thead
-      %tr
-        %th #
-        %th Month
-        %th Number left to explain
-        %th Download
     %tbody
     - @archives.each do |archive|
       %tr
-        %td= archive.id
-        %td= archive.start_date
-        %td= archive.transactions_left_to_explain
-        %td= link_to_archive_or_generate archive
+        %td= Date::MONTHNAMES[archive.month]
+        %td= archive_action_link(archive)
