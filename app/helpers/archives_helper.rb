@@ -2,7 +2,7 @@ module ArchivesHelper
   def archive_action_link(archive)
     if archive.s3_url.present?
       download_button(archive)
-    elsif archive.transactions_left_to_explain > 0
+    elsif archive.transactions_left_to_explain && archive.transactions_left_to_explain > 0
       transactions_left_to_explain_label(archive)
     else
       generate_button(archive)
