@@ -44,7 +44,7 @@ private
     bank_transactions.each do |bt|
       explanation = FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations
       add_file_to_archive(zipfile, 'bank_transactions', explanation.attachment) if explanation.attachment
-      add_file_to_archive(zipfile, 'bank_transactions', explanation.paid_bill.attachment) if explanation.paid_bill
+      add_file_to_archive(zipfile, 'bank_transactions', explanation.paid_bill.attachment) if explanation.paid_bill && explanation.paid_bill.attachment
     end
   end
 
@@ -56,7 +56,7 @@ private
   end
 
   def add_file_to_archive(zipfile, folder, attachment)
-    zipfile.file.open("#{folder}/#{attachment.filename}", "w") do |file|
+    zipfile.file.open("#{folder}/#{attachment.file_name}", "w") do |file|
       file << open(attachment.content_src).read
     end
   end
