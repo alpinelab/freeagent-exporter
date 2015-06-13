@@ -56,11 +56,8 @@ private
   end
 
   def add_file_to_archive(zipfile, folder, attachment)
-    zipfile.file.open("#{folder}/#{attachment.file_name}", "w") do |file|
+    zipfile.file.open("#{folder}/#{attachment.filename}", "w") do |file|
       file << open(attachment.content_src).read
     end
   end
-
 end
-
-
