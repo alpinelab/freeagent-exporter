@@ -11,7 +11,7 @@ module ArchivesHelper
 
   def download_button(archive)
     link_to(
-      content_tag(:span, "", class: %w{glyphicon glyphicon-download-alt}) + "Download Archive",
+      content_tag(:span, "", class: %w{glyphicon glyphicon-download-alt}) + " Download Archive",
       archive.s3_url,
       class: %w{btn btn-sm btn-success}
     )
@@ -23,7 +23,7 @@ module ArchivesHelper
 
   def generate_button(archive)
     link_to(
-      content_tag(:span, "", class: %w{glyphicon glyphicon-cog}) + "Generate Archive",
+      content_tag(:span, "", class: %w{glyphicon glyphicon-cog}) + " Generate Archive",
       archive,
       method: 'PUT',
       class: %w{btn btn-sm btn-primary}
