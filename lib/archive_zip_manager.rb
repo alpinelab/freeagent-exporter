@@ -43,8 +43,8 @@ private
     zipfile.dir.mkdir("bank_transactions")
     bank_transactions.each do |bt|
       explanation = FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations
-      add_file_to_archive(zipfile, 'bank_transactions', explanation.attachment) if explanation.attachment
-      add_file_to_archive(zipfile, 'bank_transactions', explanation.paid_bill.attachment) if explanation.paid_bill && explanation.paid_bill.attachment
+      add_file_to_archive(zipfile, 'bank_transactions', document_name(explanation, "attachment", explanation.attachment.content_type), explanation.attachment) if explanation.attachment
+      add_file_to_archive(zipfile, 'bank_transactions', document_name(explanation, "bill", explanation.paid_bill.attachment.content_type), explanation.paid_bill.attachment) if explanation.paid_bill && explanation.paid_bill.attachment
     end
   end
 
@@ -54,13 +54,27 @@ private
     expenses.each do |expense|
       user_folder = "#{expense.user.first_name}#{expense.user.last_name}".parameterize
       zipfile.dir.mkdir(user_folder) rescue nil
-      add_file_to_archive(zipfile, user_folder, expense.attachment) if expense.attachment
+      add_file_to_archive(zipfile, user_folder, document_name(expense, "expense", expense.attachment.content_type), expense.attachment) if expense.attachment
     end
   end
 
-  def add_file_to_archive(zipfile, folder, attachment)
-    zipfile.file.open("#{folder}/#{attachment.file_name}", "w") do |file|
+  def add_file_to_archive(zipfile, folder, document_name, attachment)
+    zipfile.file.open("#{folder}/#{document_name}", "w") do |file|
       file << open(attachment.content_src).read
+    end
+  end
+
+  def document_name(explanation, type, content_type)
+    "#{explanation.id}-#{type}.#{document_extension(content_type)}"
+  end
+
+  def document_extension(content_type)
+    case content_type
+    when "image/jpeg"      then "jpeg"
+    when "image/jpg"       then "jpg"
+    when "image/png"       then "png"
+    when "application/pdf" then "pdf"
+    else content_type.split("/").last
     end
   end
 end
