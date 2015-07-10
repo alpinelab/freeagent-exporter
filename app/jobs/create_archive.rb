@@ -25,7 +25,7 @@ class CreateArchive
 private
 
   def init_freeagent
-    FreeAgent.environment = ENV['FREEAGENT_ENV'].to_sym
+    FreeAgent.environment = Rails.application.secrets.freeagent_env.to_sym
     FreeAgent.access_details(
       Rails.application.secrets.freeagent_id,
       Rails.application.secrets.freeagent_secret,
