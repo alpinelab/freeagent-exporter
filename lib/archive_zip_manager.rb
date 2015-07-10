@@ -43,21 +43,33 @@ private
     zipfile.dir.mkdir("bank_transactions")
     bank_transactions.each do |bt|
       explanation = FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations
-      add_file_to_archive(zipfile, 'bank_transactions', explanation.attachment) if explanation.attachment
-      add_file_to_archive(zipfile, 'bank_transactions', explanation.paid_bill.attachment) if explanation.paid_bill && explanation.paid_bill.attachment
+      add_file_to_archive(zipfile, 'bank_transactions', file_name(explanation, "attachment", explanation.attachment.content_type), explanation.attachment) if explanation.attachment
+      add_file_to_archive(zipfile, 'bank_transactions', file_name(explanation, "bill", explanation.paid_bill.attachment.content_type), explanation.paid_bill.attachment) if explanation.paid_bill && explanation.paid_bill.attachment
     end
   end
 
   def add_expenses(zipfile)
     zipfile.dir.mkdir("expenses")
     expenses.each do |expense|
-      add_file_to_archive(zipfile, 'expenses', expense.attachment) if expense.attachment
+      add_file_to_archive(zipfile, 'expenses', file_name(expense, "expense", expense.attachment.content_type), expense.attachment) if expense.attachment
     end
   end
 
-  def add_file_to_archive(zipfile, folder, attachment)
-    zipfile.file.open("#{folder}/#{attachment.file_name}", "w") do |file|
+  def add_file_to_archive(zipfile, folder, file_name, attachment)
+    zipfile.file.open("#{folder}/#{file_name}", "w") do |file|
       file << open(attachment.content_src).read
+    end
+  end
+
+  def file_name(explanation, type, content_type)
+    "#{explanation.id}-#{type}.#{file_extension(content_type)}"
+  end
+
+  def file_extension(content_type)
+    case content_type
+    when "application/jpeg" then "jpeg"
+    when "application/jpg"  then "jpg"
+    else "pdf"
     end
   end
 end
