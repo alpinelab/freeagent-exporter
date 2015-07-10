@@ -67,9 +67,11 @@ private
 
   def file_extension(content_type)
     case content_type
-    when "application/jpeg" then "jpeg"
-    when "application/jpg"  then "jpg"
-    else "pdf"
+    when "image/jpeg"      then "jpeg"
+    when "image/jpg"       then "jpg"
+    when "image/png"       then "png"
+    when "application/pdf" then "pdf"
+    else content_type.split("/").last
     end
   end
 end
