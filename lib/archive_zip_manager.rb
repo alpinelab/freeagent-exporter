@@ -50,8 +50,11 @@ private
 
   def add_expenses(zipfile)
     zipfile.dir.mkdir("expenses")
+    zipfile.dir.chdir("expenses")
     expenses.each do |expense|
-      add_file_to_archive(zipfile, 'expenses', expense.attachment) if expense.attachment
+      user_folder = "#{expense.user.first_name}#{expense.user.last_name}".parameterize
+      zipfile.dir.mkdir(user_folder) rescue nil
+      add_file_to_archive(zipfile, user_folder, expense.attachment) if expense.attachment
     end
   end
 

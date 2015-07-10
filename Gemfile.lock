@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/alpinelab/freeagent-api-ruby.git
-  revision: 9d6b3e8fe83408dcdf6ac3fbacb0792793453801
+  revision: 784a1626f962ba4f74bb49e66365cde54a880e38
   branch: master
   specs:
     freeagent-api-ruby (0.0.1)
@@ -295,4 +295,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.10.3
+   1.10.5
