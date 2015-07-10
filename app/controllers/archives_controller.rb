@@ -9,7 +9,10 @@ class ArchivesController < ApplicationController
   end
 
   def show
-    render partial: 'archives/show', locals: { archive: archive }
+    respond_to do |format|
+      format.html { render partial: 'archives/show', locals: { archive: archive } }
+      format.csv { send_data @archive.to_csv, filename: 'test.csv' }
+    end
   end
 
   def update

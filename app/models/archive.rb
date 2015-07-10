@@ -1,3 +1,5 @@
+require 'csv'
+
 class Archive < ActiveRecord::Base
   include Statesman::Adapters::ActiveRecordQueries
 
@@ -19,5 +21,18 @@ class Archive < ActiveRecord::Base
 
   def state_machine
     @state_machine ||= ArchiveStateMachine.new(self, transition_class: ArchiveTransition)
+  end
+
+  def to_csv
+    bank_transactions = FreeAgent::BankTransaction.find_all_by_bank_account(
+      bank_account.freeagent_id,
+      { from_date: start_date, to_date: end_date }
+    )
+    CSV.generate do |csv|
+      bank_transactions.each do |bank_transaction|
+        csv << [bank_transaction.id, "#{bank_transaction.id}-foo.png"]
+      end
+    end
+
   end
 end
