@@ -6,3 +6,4 @@
       %tr
         %td= Date::MONTHNAMES[archive.month]
         %td= archive_action_link(archive)
+        %td= link_to "Download CSV", archive_path(archive, format: :csv)

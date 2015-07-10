@@ -1,10 +1,18 @@
 class ArchivesController < ApplicationController
   before_action :find_year, :find_account, only: :index
-  before_action :find_archive, only: :update
+  before_action :find_archive, only: [:update, :show]
 
   def index
     @archives = (1..12).map do |month|
       Archive.find_or_create_by(bank_account: @account, year: @year, month: month)
+    end
+  end
+
+  def show
+    redirect_to archives_path if @archive.s3_url.empty?
+    respond_to do |format|
+      format.html { redirect_to @archive.s3_url }
+      format.csv { send_data @archive.to_csv, filename: 'test.csv' }
     end
   end
 
