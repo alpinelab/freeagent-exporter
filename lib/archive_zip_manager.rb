@@ -43,29 +43,29 @@ private
     zipfile.dir.mkdir("bank_transactions")
     bank_transactions.each do |bt|
       explanation = FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations
-      add_file_to_archive(zipfile, 'bank_transactions', file_name(explanation, "attachment", explanation.attachment.content_type), explanation.attachment) if explanation.attachment
-      add_file_to_archive(zipfile, 'bank_transactions', file_name(explanation, "bill", explanation.paid_bill.attachment.content_type), explanation.paid_bill.attachment) if explanation.paid_bill && explanation.paid_bill.attachment
+      add_file_to_archive(zipfile, 'bank_transactions', document_name(explanation, "attachment", explanation.attachment.content_type), explanation.attachment) if explanation.attachment
+      add_file_to_archive(zipfile, 'bank_transactions', document_name(explanation, "bill", explanation.paid_bill.attachment.content_type), explanation.paid_bill.attachment) if explanation.paid_bill && explanation.paid_bill.attachment
     end
   end
 
   def add_expenses(zipfile)
     zipfile.dir.mkdir("expenses")
     expenses.each do |expense|
-      add_file_to_archive(zipfile, 'expenses', file_name(expense, "expense", expense.attachment.content_type), expense.attachment) if expense.attachment
+      add_file_to_archive(zipfile, 'expenses', document_name(expense, "expense", expense.attachment.content_type), expense.attachment) if expense.attachment
     end
   end
 
-  def add_file_to_archive(zipfile, folder, file_name, attachment)
-    zipfile.file.open("#{folder}/#{file_name}", "w") do |file|
+  def add_file_to_archive(zipfile, folder, document_name, attachment)
+    zipfile.file.open("#{folder}/#{document_name}", "w") do |file|
       file << open(attachment.content_src).read
     end
   end
 
-  def file_name(explanation, type, content_type)
-    "#{explanation.id}-#{type}.#{file_extension(content_type)}"
+  def document_name(explanation, type, content_type)
+    "#{explanation.id}-#{type}.#{document_extension(content_type)}"
   end
 
-  def file_extension(content_type)
+  def document_extension(content_type)
     case content_type
     when "image/jpeg"      then "jpeg"
     when "image/jpg"       then "jpg"
