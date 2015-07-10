@@ -42,9 +42,10 @@ private
   def add_bank_transactions(zipfile)
     zipfile.dir.mkdir("bank_transactions")
     bank_transactions.each do |bt|
-      explanation = FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations
-      add_file_to_archive(zipfile, 'bank_transactions', document_name(explanation, "attachment", explanation.attachment.content_type), explanation.attachment) if explanation.attachment
-      add_file_to_archive(zipfile, 'bank_transactions', document_name(explanation, "bill", explanation.paid_bill.attachment.content_type), explanation.paid_bill.attachment) if explanation.paid_bill && explanation.paid_bill.attachment
+      FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations.each do | explanation |
+        add_file_to_archive(zipfile, 'bank_transactions', document_name(explanation, "attachment", explanation.attachment.content_type), explanation.attachment) if explanation.attachment
+        add_file_to_archive(zipfile, 'bank_transactions', document_name(explanation, "bill", explanation.paid_bill.attachment.content_type), explanation.paid_bill.attachment) if explanation.paid_bill && explanation.paid_bill.attachment
+      end
     end
   end
 
