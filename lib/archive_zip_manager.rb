@@ -52,8 +52,11 @@ private
 
   def add_expenses(zipfile)
     zipfile.dir.mkdir("expenses")
+    zipfile.dir.chdir("expenses")
     expenses.each do |expense|
-      add_attachment_to_archive(zipfile, 'expenses', document_name(expense, "expense", expense.attachment.content_type), expense.attachment) if expense.attachment
+      user_folder = "#{expense.user.first_name}#{expense.user.last_name}".parameterize
+      zipfile.dir.mkdir(user_folder) if zipfile.find_entry("expenses/#{user_folder}").nil?
+      add_file_to_archive(zipfile, user_folder, document_name(expense, "expense", expense.attachment.content_type), expense.attachment) if expense.attachment
     end
   end
 
@@ -97,7 +100,7 @@ private
 
   def bank_transaction_explanations_range
     btes = FreeAgent::BankTransactionExplanation.find_all_by_bank_account(archive.bank_account.freeagent_id, from_date: archive.start_date, to_date: archive.end_date)
-    
+
     btes.reduce({}) do |accumulator, explanation|
       if accumulator[explanation.paid_invoice_id].nil?
         accumulator[explanation.paid_invoice_id] = [explanation]
