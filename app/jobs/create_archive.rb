@@ -17,7 +17,7 @@ class CreateArchive
     archive.update_attributes(transactions_left_to_explain: transactions_left_to_explain)
 
     if transactions_left_to_explain == 0 && bank_transactions.length > 0
-      url = ::ArchiveZipManager.generate(archive, bank_transactions, expenses)
+      url = ::ArchiveZipManager.generate(archive, bank_transactions, expenses, invoices)
       archive.update_attributes(s3_url: url) if url
     end
   end

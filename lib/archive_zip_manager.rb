@@ -58,8 +58,11 @@ private
   end
 
   def add_invoices(zipfile)
+    bte = bank_transaction_explanations_range
+
     zipfile.dir.mkdir('invoices')
     invoices.each do |invoice|
+      invoice.bank_transaction_explanations = bte[invoice.id]
       add_invoice_to_archive(zipfile, 'invoices', invoice)
     end
   end
@@ -89,6 +92,19 @@ private
     when "image/png"       then "png"
     when "application/pdf" then "pdf"
     else content_type.split("/").last
+    end
+  end
+
+  def bank_transaction_explanations_range
+    btes = FreeAgent::BankTransactionExplanation.find_all_by_bank_account(archive.bank_account.freeagent_id, from_date: archive.start_date, to_date: archive.end_date)
+    
+    btes.reduce({}) do |acc, explanation|
+      if acc[explanation.paid_invoice_id].nil?
+        acc[explanation.paid_invoice_id] = [explanation]
+      else
+        acc[explanation.paid_invoice_id] << explanation
+      end
+      acc
     end
   end
 end

@@ -24,6 +24,7 @@ gem 'gravatar_image_tag'
 gem 'pdfkit'
 
 group :development do
+  gem 'awesome_print'
   gem 'spring'
   gem 'wkhtmltopdf-binary-edge', '~> 0.12.2.1'
 end
