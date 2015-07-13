@@ -7,7 +7,6 @@
       body { font-family: Helvetica; } ;; Force to a font Wkhtmltopdf understands
   %body
     %div.center-block
-      %p= 'ff'
       %p= "#{contact.first_name} #{contact.last_name}"
       %p= contact.organisation_name
       %h2.text-right= "Facture #{reference}"
@@ -21,16 +20,16 @@
             %th= 'Prix unitaire HT. (€)'
             %th= 'Sous-Total (€)'
           %tbody
-            - if !invoice_items.nil?
+            - if invoice_items.present?
               - invoice_items.each do |item|
                 %tr
-                  %td= item.quantity.to_s + ' ' + item.item_type
+                  %td= "#{item.quantity} #{item.item_type}"
                   %td= item.description
-                  %td= item.price.to_s
-                  %td= (item.price * item.quantity).to_s
+                  %td= item.price
+                  %td= item.price * item.quantity
           %tfoot
             %tr
-              %td.text-right{ :colspan => 3 }
+              %td.text-right{ colspan: 3 }
                 %strong Eur Total
               %td
-                %strong= "€ #{net_value.to_s}"
+                %strong= "#{net_value.to_s}€"
