@@ -98,13 +98,13 @@ private
   def bank_transaction_explanations_range
     btes = FreeAgent::BankTransactionExplanation.find_all_by_bank_account(archive.bank_account.freeagent_id, from_date: archive.start_date, to_date: archive.end_date)
     
-    btes.reduce({}) do |acc, explanation|
-      if acc[explanation.paid_invoice_id].nil?
-        acc[explanation.paid_invoice_id] = [explanation]
+    btes.reduce({}) do |accumulator, explanation|
+      if accumulator[explanation.paid_invoice_id].nil?
+        accumulator[explanation.paid_invoice_id] = [explanation]
       else
-        acc[explanation.paid_invoice_id] << explanation
+        accumulator[explanation.paid_invoice_id] << explanation
       end
-      acc
+      accumulator
     end
   end
 end
