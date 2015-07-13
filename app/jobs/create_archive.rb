@@ -51,4 +51,8 @@ private
   def expenses
     @expenses ||= FreeAgent::Expense.filter(from_date: archive.start_date, to_date: archive.end_date)
   end
+
+  def invoices
+    @invoices ||= FreeAgent::Invoice.filter(from_date: archive.start_date, to_date: archive.end_date, nested_invoice_items: 'true')
+  end
 end
