@@ -19,17 +19,27 @@
             %th= 'Description'
             %th= 'Prix unitaire HT. (€)'
             %th= 'Sous-Total (€)'
-          %tbody
-            - if invoice_items.present?
-              - invoice_items.each do |item|
-                %tr
-                  %td= "#{item.quantity} #{item.item_type}"
-                  %td= item.description
-                  %td= item.price
-                  %td= item.price * item.quantity
-          %tfoot
+        %tbody
+        - if invoice_items.present?
+          - invoice_items.each do |item|
             %tr
-              %td.text-right{ colspan: 3 }
-                %strong Eur Total
-              %td
-                %strong= "#{net_value.to_s}€"
+              %td= item.description
+              %td= "#{item.quantity} #{item.item_type}"
+              %td= item.price
+              %td= item.price * item.quantity
+        %tfoot
+          %tr
+            %td.text-right{ colspan: 3 }
+              %strong Eur Total
+            %td
+              %strong= "#{net_value.to_s}€"
+      - if bank_transaction_explanations.present?
+        %p Modalités de réglement
+        %table
+          %tbody
+          - bank_transaction_explanations.each do |explanation|
+            - transaction = explanation.bank_transaction
+            %tr
+              %td Référence de votre réglement:
+              %td= transaction.id
+

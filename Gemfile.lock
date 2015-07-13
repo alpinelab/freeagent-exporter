@@ -49,6 +49,7 @@ GEM
     autoprefixer-rails (5.1.11)
       execjs
       json
+    awesome_print (1.6.1)
     aws-sdk (2.0.43)
       aws-sdk-resources (= 2.0.43)
     aws-sdk-core (2.0.43)
@@ -269,6 +270,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  awesome_print
   aws-sdk (~> 2)
   bootstrap-sass (~> 3.3.4)
   capybara
