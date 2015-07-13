@@ -1,5 +1,4 @@
 class InvoicePdfPrinter
-
   def self.haml_template
     @haml_template ||= Haml::Engine.new(template_file)
   end
@@ -13,18 +12,10 @@ class InvoicePdfPrinter
   end
 
   def self.invoice_to_pdf(invoice)
-    PDFKit.new(
-      haml_template.render(
-        invoice,
-        template_options
-      )
-    ).to_pdf
+    PDFKit.new(haml_template.render(invoice, template_options)).to_pdf
   end
 
   def self.invoice_to_html(invoice)
-    haml_template.render(
-      invoice,
-      template_options
-    )
+    haml_template.render(invoice, template_options)
   end
 end
