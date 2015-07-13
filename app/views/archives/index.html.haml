@@ -1,4 +1,7 @@
-%h1= "Archives #{@year}"
+%h1
+  = "Archives #{@year}"
+  = render partial: "shared/account_switcher"
+
 .row
   %table.table.table-hover
     %tbody
