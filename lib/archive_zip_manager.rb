@@ -1,11 +1,12 @@
 class ArchiveZipManager
 
-  attr_reader :archive, :bank_transactions, :expenses, :filename, :root_path
+  attr_reader :archive, :bank_transactions, :expenses, :filename, :root_path, :invoices
 
-  def initialize(archive, bank_transactions, expenses)
+  def initialize(archive, bank_transactions, expenses, invoices)
     @archive           = archive
     @bank_transactions = bank_transactions
     @expenses          = expenses
+    @invoices          = invoices
     @filename          = "#{archive.year}-#{archive.month}-#{SecureRandom.uuid}.zip"
     @root_path         = Rails.root.join('tmp', 'archives')
 
@@ -18,8 +19,8 @@ class ArchiveZipManager
     upload
   end
 
-  def self.generate(archive, bank_transactions, expenses)
-    ArchiveZipManager.new(archive, bank_transactions, expenses).generate
+  def self.generate(archive, bank_transactions, expenses, invoices)
+    ArchiveZipManager.new(archive, bank_transactions, expenses, invoices).generate
   end
 
 private
@@ -28,6 +29,7 @@ private
     Zip::File.open("#{root_path}/#{filename}", Zip::File::CREATE) do |zipfile|
       add_bank_transactions(zipfile)
       add_expenses(zipfile)
+      add_invoices(zipfile)
     end
   end
 
@@ -55,9 +57,24 @@ private
     end
   end
 
-  def add_file_to_archive(zipfile, folder, attachment)
-    zipfile.file.open("#{folder}/#{attachment.file_name}", "w") do |file|
-      file << open(attachment.content_src).read
+  def add_invoices(zipfile)
+    zipfile.dir.mkdir('invoices')
+    invoices.each do |invoice|
+      add_invoice_to_archive(zipfile, 'invoices', invoice)
+    end
+  end
+
+  def add_attachment_to_archive(zipfile, folder, attachment)
+    add_file_to_archive(zipfile, folder, open(attachment.content_src).read, attachment.file_name)
+  end
+
+  def add_invoice_to_archive(zipfile, folder, invoice)
+    add_file_to_archive(zipfile, folder, InvoicePdfPrinter.invoice_to_pdf(invoice), "invoice_#{invoice.id}.pdf")
+  end
+
+  def add_file_to_archive(zipfile, folder, file_to_add, file_name)
+    zipfile.file.open("#{folder}/#{file_name}", "w") do |file|
+      file << file_to_add
     end
   end
 end
