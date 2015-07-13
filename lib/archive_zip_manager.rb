@@ -1,11 +1,12 @@
 class ArchiveZipManager
 
-  attr_reader :archive, :bank_transactions, :expenses, :filename, :root_path
+  attr_reader :archive, :bank_transactions, :expenses, :filename, :root_path, :invoices
 
-  def initialize(archive, bank_transactions, expenses)
+  def initialize(archive, bank_transactions, expenses, invoices)
     @archive           = archive
     @bank_transactions = bank_transactions
     @expenses          = expenses
+    @invoices          = invoices
     @filename          = "#{archive.year}-#{archive.month}-#{SecureRandom.uuid}.zip"
     @root_path         = Rails.root.join('tmp', 'archives')
 
@@ -18,8 +19,8 @@ class ArchiveZipManager
     upload
   end
 
-  def self.generate(archive, bank_transactions, expenses)
-    ArchiveZipManager.new(archive, bank_transactions, expenses).generate
+  def self.generate(archive, bank_transactions, expenses, invoices)
+    ArchiveZipManager.new(archive, bank_transactions, expenses, invoices).generate
   end
 
 private
@@ -28,6 +29,7 @@ private
     Zip::File.open("#{root_path}/#{filename}", Zip::File::CREATE) do |zipfile|
       add_bank_transactions(zipfile)
       add_expenses(zipfile)
+      add_invoices(zipfile)
     end
   end
 
@@ -43,21 +45,36 @@ private
     zipfile.dir.mkdir("bank_transactions")
     bank_transactions.each do |bt|
       explanation = FreeAgent::BankTransaction.find(bt.id).bank_transaction_explanations
-      add_file_to_archive(zipfile, 'bank_transactions', document_name(explanation, "attachment", explanation.attachment.content_type), explanation.attachment) if explanation.attachment
-      add_file_to_archive(zipfile, 'bank_transactions', document_name(explanation, "bill", explanation.paid_bill.attachment.content_type), explanation.paid_bill.attachment) if explanation.paid_bill && explanation.paid_bill.attachment
+      add_attachment_to_archive(zipfile, 'bank_transactions', document_name(explanation, "attachment", explanation.attachment.content_type), explanation.attachment) if explanation.attachment
+      add_attachment_to_archive(zipfile, 'bank_transactions', document_name(explanation, "bill", explanation.paid_bill.attachment.content_type), explanation.paid_bill.attachment) if explanation.paid_bill && explanation.paid_bill.attachment
     end
   end
 
   def add_expenses(zipfile)
     zipfile.dir.mkdir("expenses")
     expenses.each do |expense|
-      add_file_to_archive(zipfile, 'expenses', document_name(expense, "expense", expense.attachment.content_type), expense.attachment) if expense.attachment
+      add_attachment_to_archive(zipfile, 'expenses', document_name(expense, "expense", expense.attachment.content_type), expense.attachment) if expense.attachment
     end
   end
 
-  def add_file_to_archive(zipfile, folder, document_name, attachment)
+  def add_invoices(zipfile)
+    zipfile.dir.mkdir('invoices')
+    invoices.each do |invoice|
+      add_invoice_to_archive(zipfile, 'invoices', invoice)
+    end
+  end
+
+  def add_attachment_to_archive(zipfile, folder, document_name, attachment)
+    add_file_to_archive(zipfile, folder, document_name, open(attachment.content_src).read)
+  end
+
+  def add_invoice_to_archive(zipfile, folder, invoice)
+    add_file_to_archive(zipfile, folder, "invoice_#{invoice.id}.pdf", InvoicePdfPrinter.invoice_to_pdf(invoice))
+  end
+
+  def add_file_to_archive(zipfile, folder, document_name, file_to_add)
     zipfile.file.open("#{folder}/#{document_name}", "w") do |file|
-      file << open(attachment.content_src).read
+      file << file_to_add
     end
   end
 

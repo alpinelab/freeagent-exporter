@@ -1,0 +1,36 @@
+!!!
+%html
+  %head
+    %title= "Invoice #{id}"
+    %style
+      = stylesheet
+      body { font-family: Helvetica; } ;; Force to a font Wkhtmltopdf understands
+  %body
+    %div.center-block
+      %p= 'ff'
+      %p= "#{contact.first_name} #{contact.last_name}"
+      %p= contact.organisation_name
+      %h2.text-right= "Facture #{reference}"
+      %h3.text-right= dated_on.strftime('%d/%m/%Y')
+      %h4.text-right= "Exigible le #{due_on.strftime('%d/%m/%Y')}"
+      %table.table.table-bordered
+        %thead
+          %tr
+            %th= 'Quantité'
+            %th= 'Description'
+            %th= 'Prix unitaire HT. (€)'
+            %th= 'Sous-Total (€)'
+          %tbody
+            - if !invoice_items.nil?
+              - invoice_items.each do |item|
+                %tr
+                  %td= item.quantity.to_s + ' ' + item.item_type
+                  %td= item.description
+                  %td= item.price.to_s
+                  %td= (item.price * item.quantity).to_s
+          %tfoot
+            %tr
+              %td.text-right{ :colspan => 3 }
+                %strong Eur Total
+              %td
+                %strong= "€ #{net_value.to_s}"
