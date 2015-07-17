@@ -12,17 +12,19 @@ class CreateArchive
     @archive_id = archive_id
     init_freeagent
 
-    puts "#{archive.start_date} got #{bank_transactions.length} bank_transactions and #{expenses.length} expenses"
-
     archive.update_attributes(transactions_left_to_explain: transactions_left_to_explain)
 
-    if transactions_left_to_explain == 0 && bank_transactions.length > 0
+    if archive_can_be_generated?
       url = ArchiveGenerator.call(archive, bank_transactions, expenses, invoices)
       archive.update_attributes(s3_url: url) if url
     end
   end
 
 private
+
+  def archive_can_be_generated?
+    transactions_left_to_explain == 0 && bank_transactions.length > 0
+  end
 
   def init_freeagent
     FreeAgent.environment = Rails.application.secrets.freeagent_env.to_sym
