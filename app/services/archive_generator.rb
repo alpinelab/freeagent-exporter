@@ -1,18 +1,18 @@
 class ArchiveGenerator
-  attr_reader :archive, :bank_transactions, :expenses, :zipname, :tmp_root,:invoices
+  attr_reader :archive, :bank_transactions, :expenses,:invoices
 
   def initialize(archive, bank_transactions, expenses, invoices)
     @archive           = archive
     @bank_transactions = bank_transactions
     @expenses          = expenses
     @invoices          = invoices
-    @zipname           = "#{archive.year}-#{format('%02d', archive.month)}-#{SecureRandom.uuid}.zip"
-    @tmp_root          = Rails.root.join('tmp', 'archives')
   end
 
   def call
-    create
-    upload
+    add_bills
+    add_expenses
+    add_invoices
+    zipfile
   end
 
   def self.call(archive, bank_transactions, expenses, invoices)
@@ -20,21 +20,6 @@ class ArchiveGenerator
   end
 
 private
-
-  def create
-    add_bills
-    add_expenses
-    add_invoices
-    zipfile.close
-  end
-
-  def upload
-    s3     = Aws::S3::Resource.new
-    bucket = s3.bucket(Rails.application.secrets.aws_s3_bucket_name)
-    obj    = bucket.object("#{archive.bank_account.id}/#{zipname}")
-
-    obj.public_url if obj.upload_file("#{tmp_root}/#{zipname}")
-  end
 
   def add_bills
     bank_transactions.each do |bank_transaction|
@@ -72,7 +57,11 @@ private
     end
   end
 
+  def filename
+    @filename ||= "#{archive.year}-#{format('%02d', archive.month)}-#{SecureRandom.uuid}.zip"
+  end
+
   def zipfile
-    @zipfile ||= Zip::File.open("#{tmp_root}/#{zipname}", Zip::File::CREATE)
+    @zipfile ||= Zip::File.open(Rails.root.join('tmp', 'archives', filename), Zip::File::CREATE)
   end
 end

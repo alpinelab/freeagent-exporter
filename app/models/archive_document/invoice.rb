@@ -10,7 +10,7 @@ protected
     @content_type ||= "application/pdf"
   end
 
-  def path
-    @path ||= "invoice_#{document.id}.pdf" unless document.nil?
+  def filename
+    @filename ||= "invoice_#{document.id}.pdf" unless document.nil?
   end
 end

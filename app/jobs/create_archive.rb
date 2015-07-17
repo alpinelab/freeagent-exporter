@@ -13,11 +13,10 @@ class CreateArchive
     init_freeagent
 
     archive.update_attributes(transactions_left_to_explain: transactions_left_to_explain)
+    return unless archive_can_be_generated?
 
-    if archive_can_be_generated?
-      url = ArchiveGenerator.call(archive, bank_transactions, expenses, invoices)
-      archive.update_attributes(s3_url: url) if url
-    end
+    zipfile = ArchiveGenerator.call(archive, bank_transactions, expenses, invoices)
+    ArchiveUploader.call(archive, zipfile)
   end
 
 private
@@ -40,14 +39,11 @@ private
   end
 
   def archive
-    archive ||= Archive.find(@archive_id)
+    @archive ||= Archive.find(@archive_id)
   end
 
   def bank_transactions
-    @bank_transactions ||= FreeAgent::BankTransaction.find_all_by_bank_account(
-      archive.bank_account.freeagent_id,
-      { from_date: archive.start_date, to_date: archive.end_date }
-    )
+    @bank_transactions ||= FreeAgent::BankTransaction.find_all_by_bank_account(archive.bank_account.freeagent_id, from_date: archive.start_date, to_date: archive.end_date)
   end
 
   def expenses

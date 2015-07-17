@@ -40,6 +40,7 @@ protected
     when "image/jpg"       then "jpg"
     when "image/png"       then "png"
     when "application/pdf" then "pdf"
+    when nil               then "unknown"
     else content_type.split("/").last
     end
   end
