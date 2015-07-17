@@ -1,4 +1,4 @@
-class ArchiveZipManager
+class ArchiveGenerator
   attr_reader :archive, :bank_transactions, :expenses, :zipname, :tmp_root,:invoices
 
   def initialize(archive, bank_transactions, expenses, invoices)
@@ -10,13 +10,13 @@ class ArchiveZipManager
     @tmp_root          = Rails.root.join('tmp', 'archives')
   end
 
-  def generate
+  def call
     create
     upload
   end
 
-  def self.generate(archive, bank_transactions, expenses, invoices)
-    new(archive, bank_transactions, expenses, invoices).generate
+  def self.call(archive, bank_transactions, expenses, invoices)
+    new(archive, bank_transactions, expenses, invoices).call
   end
 
 private
