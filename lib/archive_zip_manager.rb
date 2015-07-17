@@ -21,8 +21,8 @@ class ArchiveZipManager
 private
 
   def create
-    # add_bills
-    # add_expenses
+    add_bills
+    add_expenses
     add_invoices
     zipfile.close
   end
