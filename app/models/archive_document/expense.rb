@@ -1,4 +1,4 @@
-class ArchiveExpense < ArchiveDocument
+class ArchiveDocument::Expense < ArchiveDocument::Base
 
 protected
 

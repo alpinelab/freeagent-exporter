@@ -38,15 +38,15 @@ private
   def add_bills
     bank_transactions.each do |bank_transaction|
       bank_transaction.bank_transaction_explanations.each do |explanation|
-        ArchiveExplanation.new(explanation).add_to_archive(zipfile) if explanation.attachment.present?
-        ArchiveBill.new(explanation.paid_bill, explanation).add_to_archive(zipfile) if explanation.paid_bill.present? && explanation.paid_bill.attachment.present?
+        ArchiveDocument::Explanation.new(explanation).add_to_archive(zipfile) if explanation.attachment.present?
+        ArchiveDocument::Bill.new(explanation.paid_bill, explanation).add_to_archive(zipfile) if explanation.paid_bill.present? && explanation.paid_bill.attachment.present?
       end
     end
   end
 
   def add_expenses
     expenses.each do |expense|
-      ArchiveExpense.new(expense).add_to_archive(zipfile)
+      ArchiveDocument::Expense.new(expense).add_to_archive(zipfile)
     end
   end
 
@@ -55,7 +55,7 @@ private
     zipfile.dir.mkdir("invoices")
     invoices.each do |invoice|
       invoice.bank_transaction_explanations = bte[invoice.id]
-      ArchiveInvoice.new(invoice).add_to_archive(zipfile)
+      ArchiveDocument::Invoice.new(invoice).add_to_archive(zipfile)
     end
   end
 

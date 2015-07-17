@@ -1,4 +1,4 @@
-class ArchiveDocument
+class ArchiveDocument::Base
   attr_reader :document
 
   def initialize(document)

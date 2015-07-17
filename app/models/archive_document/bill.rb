@@ -1,4 +1,4 @@
-class ArchiveBill < ArchiveDocument
+class ArchiveDocument::Bill < ArchiveDocument::Base
   attr_reader :explanation
 
   def initialize(bill, explanation)

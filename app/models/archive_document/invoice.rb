@@ -1,4 +1,4 @@
-class ArchiveInvoice < ArchiveDocument
+class ArchiveDocument::Invoice < ArchiveDocument::Base
 
 protected
 
