@@ -6,12 +6,10 @@ class ArchiveDocument::Base
   end
 
   def add_to_archive(zipfile)
-    unless document.attachment.nil?
-      zipfile.file.open("#{path}/#{filename}", "w") do |file|
-        file << content
-      end
-      zipfile.commit
+    zipfile.file.open("#{path}/#{filename}", "w") do |file|
+      file << content
     end
+    zipfile.commit
   end
 
 protected

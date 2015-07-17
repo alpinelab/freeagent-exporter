@@ -5,6 +5,7 @@ class ArchiveZipManager
     @archive           = archive
     @bank_transactions = bank_transactions
     @expenses          = expenses
+    @invoices          = invoices
     @zipname           = "#{archive.year}-#{format('%02d', archive.month)}-#{SecureRandom.uuid}.zip"
     @tmp_root          = Rails.root.join('tmp', 'archives')
   end
@@ -52,7 +53,6 @@ private
 
   def add_invoices
     bte = bank_transaction_explanations_range
-    zipfile.dir.mkdir("invoices")
     invoices.each do |invoice|
       invoice.bank_transaction_explanations = bte[invoice.id]
       ArchiveDocument::Invoice.new(invoice).add_to_archive(zipfile)
