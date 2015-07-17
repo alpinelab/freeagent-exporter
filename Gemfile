@@ -21,9 +21,12 @@ gem 'freeagent-api-ruby', github: 'alpinelab/freeagent-api-ruby', branch: 'maste
 gem 'rubyzip'
 gem 'aws-sdk', '~> 2'
 gem 'gravatar_image_tag'
+gem 'pdfkit'
 
 group :development do
+  gem 'awesome_print'
   gem 'spring'
+  gem 'wkhtmltopdf-binary-edge', '~> 0.12.2.1'
 end
 
 group :development, :test do
@@ -41,4 +44,5 @@ end
 
 group :production do
   gem 'rails_12factor'
+  gem 'wkhtmltopdf-heroku'
 end

@@ -1,15 +1,14 @@
 class ArchiveDocument
-  attr_reader :document, :explanation
+  attr_reader :document
 
-  def initialize(document, explanation = nil)
-    @document    = document
-    @explanation = explanation
+  def initialize(document)
+    @document = document
   end
 
   def add_to_archive(zipfile)
     unless document.attachment.nil?
       zipfile.file.open("#{path}/#{filename}", "w") do |file|
-        file << open(document.attachment.content_src).read
+        file << content
       end
       zipfile.commit
     end
@@ -18,32 +17,32 @@ class ArchiveDocument
 protected
 
   def filename
-    "#{filename_id}-#{type}.#{extension}"
-  end
-
-  def filename_id
-    explanation.present? ? explanation.id : document.id
+    @filename ||= "#{document.id}-#{type}.#{extension}"
   end
 
   def type
-    if document.is_a? FreeAgent::BankTransactionExplanation
-      "bill"
-    else
-      document.class.name.demodulize.parameterize
-    end
+    @type ||= document.class.name.demodulize.parameterize
+  end
+
+  def content
+    @content ||= open(document.attachment.content_src).read unless document.attachment.nil?
+  end
+
+  def content_type
+    @content_type ||= document.attachment.content_type unless document.attachment.nil?
   end
 
   def path
-    type.pluralize
+    @path ||= type.pluralize
   end
 
   def extension
-    @extension ||= case document.attachment.content_type
+    @extension ||= case content_type
     when "image/jpeg"      then "jpeg"
     when "image/jpg"       then "jpg"
     when "image/png"       then "png"
     when "application/pdf" then "pdf"
-    else document.attachment.content_type.split("/").last
+    else content_type.split("/").last
     end
   end
 end
