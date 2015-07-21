@@ -1,7 +1,3 @@
-require 'zip/filesystem'
-require 'open-uri'
-require 'fileutils'
-
 class CreateArchive
   include Sidekiq::Worker
 

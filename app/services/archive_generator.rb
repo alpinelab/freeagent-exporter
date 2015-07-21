@@ -1,3 +1,6 @@
+require 'zip/filesystem'
+require 'fileutils'
+
 class ArchiveGenerator
   attr_reader :archive, :bank_transactions, :expenses,:invoices
 
