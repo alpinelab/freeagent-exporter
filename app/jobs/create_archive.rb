@@ -9,6 +9,9 @@ class CreateArchive
     if archive_can_be_generated?
       zipfile = ArchiveGenerator.call(archive, bank_transactions, expenses, invoices)
       ArchiveUploader.call(archive, zipfile)
+      archive.transition_to :ready
+    else
+      archive.transition_to :failed
     end
   end
 

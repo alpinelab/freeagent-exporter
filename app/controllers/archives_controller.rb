@@ -10,6 +10,7 @@ class ArchivesController < ApplicationController
 
   def update
     #TODO: check if archive belong to user
+    @archive.transition_to :generating
     CreateArchive.perform_async(@archive.id)
     redirect_to archives_path
   end
