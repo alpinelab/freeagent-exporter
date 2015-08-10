@@ -11,10 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150612153534) do
+ActiveRecord::Schema.define(version: 20150810211936) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "archive_transitions", force: true do |t|
+    t.string   "to_state",                   null: false
+    t.text     "metadata",    default: "{}"
+    t.integer  "sort_key",                   null: false
+    t.integer  "archive_id",                 null: false
+    t.boolean  "most_recent",                null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "archive_transitions", ["archive_id", "most_recent"], name: "index_archive_transitions_parent_most_recent", unique: true, where: "most_recent", using: :btree
+  add_index "archive_transitions", ["archive_id", "sort_key"], name: "index_archive_transitions_parent_sort", unique: true, using: :btree
 
   create_table "archives", force: true do |t|
     t.text     "s3_url"

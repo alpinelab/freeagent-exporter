@@ -1,8 +1,13 @@
 class Archive < ActiveRecord::Base
+  include Statesman::Adapters::ActiveRecordQueries
+
   belongs_to :bank_account
+  has_many   :archive_transitions
 
   validates_presence_of :bank_account, :year
   validates_uniqueness_of :month, scope: :year
+
+  delegate :can_transition_to?, :transition_to!, :transition_to, :current_state, to: :state_machine
 
   def start_date
     Date.new(year, month, 01)
@@ -12,4 +17,7 @@ class Archive < ActiveRecord::Base
     start_date.at_end_of_month
   end
 
+  def state_machine
+    @state_machine ||= ArchiveStateMachine.new(self, transition_class: ArchiveTransition)
+  end
 end

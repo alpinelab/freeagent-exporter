@@ -6,8 +6,13 @@
 
 .row
   %table.table.table-hover
+    %thead
+      %th Month
+      %th Status
+      %th Action
     %tbody
     - @archives.each do |archive|
-      %tr
+      %tr{}
         %td= Date::MONTHNAMES[archive.month]
+        %td= archive.current_state
         %td= archive_action_link(archive)

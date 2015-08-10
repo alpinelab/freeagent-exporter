@@ -13,7 +13,7 @@ gem 'jquery-rails'
 gem 'sidekiq'
 gem 'sinatra', :require => nil
 gem 'haml-rails'
-
+gem 'statesman'
 gem 'oauth2'
 gem 'devise'
 gem 'omniauth-freeagent', github: 'jasiek/omniauth-freeagent'
