@@ -1,3 +1,5 @@
+require 'open-uri'
+
 class ArchiveDocument::Base
   attr_reader :document
 
