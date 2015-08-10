@@ -6,13 +6,9 @@
 
 .row
   %table.table.table-hover#archives
-    %thead
-      %th Month
-      %th Status
-      %th Action
     %tbody
     - @archives.each do |archive|
       %tr.archive{id: "archive-#{archive.id}"}
-        %td= Date::MONTHNAMES[archive.month]
+        %th= Date::MONTHNAMES[archive.month]
         %td{class: "status status-#{archive.current_state}"}= archive.current_state.titleize
         %td= archive_action_link(archive)
