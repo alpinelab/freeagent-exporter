@@ -7,7 +7,7 @@ class Archive < ActiveRecord::Base
   validates_presence_of :bank_account, :year
   validates_uniqueness_of :month, scope: :year
 
-  delegate :can_transition_to?, :transition_to!, :transition_to, :current_state, to: :state_machine
+  delegate :can_transition_to?, :transition_to!, :transition_to, :current_state, :last_transition, :history, :allowed_transitions, to: :state_machine
 
   def start_date
     Date.new(year, month, 01)

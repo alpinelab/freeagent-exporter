@@ -5,7 +5,7 @@ class CreateArchive
 
   def perform(archive_id)
     @archive = Archive.find(archive_id)
-    archive.update_attributes(transactions_left_to_explain: transactions_left_to_explain)
+    archive.update_attributes(transactions_left_to_explain: transactions_left_to_explain || -1)
     if archive_can_be_generated?
       zipfile = ArchiveGenerator.call(archive, bank_transactions, expenses, invoices)
       ArchiveUploader.call(archive, zipfile)
@@ -34,7 +34,7 @@ private
   end
 
   def archive_can_be_generated?
-    transactions_left_to_explain == 0 && bank_transactions.length > 0 unless bank_transactions.nil?
+    transactions_left_to_explain == 0
   end
 
   def transactions_left_to_explain

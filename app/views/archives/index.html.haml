@@ -5,14 +5,14 @@
   = render partial: "account_switcher"
 
 .row
-  %table.table.table-hover
+  %table.table.table-hover#archives
     %thead
       %th Month
       %th Status
       %th Action
     %tbody
     - @archives.each do |archive|
-      %tr{}
+      %tr.archive{id: "archive-#{archive.id}"}
         %td= Date::MONTHNAMES[archive.month]
-        %td= archive.current_state
+        %td{class: "status status-#{archive.current_state}"}= archive.current_state.titleize
         %td= archive_action_link(archive)

@@ -2,3 +2,33 @@
   .next-year
     a
       float: right
+
+.glyphicon-spin
+  animation: spin 1s infinite linear
+
+#archives
+  .archive
+    .status
+      color: $gray-light
+      font-style: italic
+      &.status-failed
+        color: $brand-danger
+      &.status-ready
+        color: $brand-success
+
+// keyframes mixin
+=keyframes($name)
+  @-webkit-keyframes #{$name}
+    @content
+  @-moz-keyframes #{$name}
+    @content
+  @-ms-keyframes #{$name}
+    @content
+  @keyframes #{$name}
+    @content
+
++keyframes(spin)
+  0%
+    transform: rotate(0deg)
+  100%
+    transform: rotate(359deg)
