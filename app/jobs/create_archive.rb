@@ -5,8 +5,8 @@ class CreateArchive
 
   def perform(archive_id)
     @archive = Archive.find(archive_id)
-    archive.update_attributes(transactions_left_to_explain: transactions_left_to_explain || -1)
-    if archive_can_be_generated?
+    archive.update_attributes(transactions_left_to_explain: transactions_left_to_explain)
+    if transactions_left_to_explain == 0
       zipfile = ArchiveGenerator.call(archive, bank_transactions, expenses, invoices)
       ArchiveUploader.call(archive, zipfile)
       archive.transition_to :ready
@@ -33,11 +33,7 @@ private
     @invoices ||= data.invoices
   end
 
-  def archive_can_be_generated?
-    transactions_left_to_explain == 0
-  end
-
   def transactions_left_to_explain
-    @transactions_left_to_explain ||= bank_transactions.select{ |bt| bt.unexplained_amount != 0 }.count unless bank_transactions.blank?
+    @transactions_left_to_explain ||= bank_transactions.blank? ? -1 : bank_transactions.select{ |bt| bt.unexplained_amount != 0 }.count
   end
 end
