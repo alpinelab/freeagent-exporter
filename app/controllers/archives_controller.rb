@@ -9,7 +9,6 @@ class ArchivesController < ApplicationController
   end
 
   def update
-    #TODO: check if archive belong to user
     archive.transition_to :generating
     CreateArchive.perform_async(archive.id)
     redirect_to :back
@@ -18,11 +17,11 @@ class ArchivesController < ApplicationController
 private
 
   def find_archive
-    redirect_to archives_path unless archive.present?
+    redirect_to archives_path, notice: t(".no_rights") unless archive.present? && current_user.can_generate?(archive)
   end
 
   def find_account
-    redirect_to bank_accounts_path, notice: "Please, track at least one bank account" unless account.present?
+    redirect_to bank_accounts_path, notice: t(".no_account") unless account.present?
   end
 
   def account

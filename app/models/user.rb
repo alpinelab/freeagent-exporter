@@ -9,4 +9,8 @@ class User < ActiveRecord::Base
     user.update_attributes!(access_token: auth.credentials.token)
     user
   end
+
+  def can_generate?(archive)
+    self.bank_accounts.include? archive.bank_account
+  end
 end

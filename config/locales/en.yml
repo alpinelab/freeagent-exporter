@@ -5,3 +5,5 @@ en:
       missing_documents: "Last time we tried, there was nothing in FreeAgent to put in this archive"
       autoreload: "You can reload or close this page if you want, but it auto-reloads every 10 seconds anyway"
       generated_on: "Generated on %{time}"
+      no_account: "Please, track at least one bank account."
+      no_rights: "Sorry, you do not have sufficient rights to generate this archive."
