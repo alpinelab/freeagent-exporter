@@ -5,7 +5,7 @@ class Archive < ActiveRecord::Base
   has_many   :archive_transitions
 
   validates_presence_of :bank_account, :year
-  validates_uniqueness_of :month, scope: :year
+  validates_uniqueness_of :month, scope: [:bank_account, :year]
 
   delegate :can_transition_to?, :transition_to!, :transition_to, :current_state, :last_transition, :history, :allowed_transitions, to: :state_machine
 
