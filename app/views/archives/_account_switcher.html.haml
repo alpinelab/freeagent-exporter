@@ -5,4 +5,4 @@
       %span.caret
     %ul.dropdown-menu
       - current_user.bank_accounts.each do |account|
-        %li= link_to account.name, archives_url(account: account.id)
+        %li= link_to account.name, params.merge(account: account)

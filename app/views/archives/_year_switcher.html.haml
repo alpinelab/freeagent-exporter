@@ -1,9 +1,9 @@
 .row.year-switcher
   .col-xs-6.prev-year
-    = link_to archives_url(year: @year.pred) do
+    = link_to params.merge(year: @year.pred) do
       %span.glyphicon.glyphicon-backward
       = @year.pred
   .col-xs-6.next-year
-    = link_to archives_url(year: @year.next) do
+    = link_to params.merge(year: @year.next) do
       = @year.next
       %span.glyphicon.glyphicon-forward
