@@ -4,7 +4,7 @@ class ArchivesController < ApplicationController
 
   def index
     @archives = (1..12).map do |month|
-      Archive.find_or_create_by(bank_account: @account, year: @year, month: month)
+      Archive.find_or_create_by!(bank_account: @account, year: @year, month: month)
     end
   end
 
