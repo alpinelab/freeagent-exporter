@@ -8,6 +8,10 @@ module ArchivesHelper
     end
   end
 
+  def explanation_if_failure(archive)
+    failure_reason(archive) if archive.current_state.to_sym == :failed
+  end
+
   def download_button(archive)
     link_to(
       content_tag(:span, "", class: %w{glyphicon glyphicon-download-alt}) + " Download Archive",
