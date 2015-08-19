@@ -1,6 +1,6 @@
 class ArchivesController < ApplicationController
   before_action :find_account, only: :index
-  before_action :find_archive, only: :update
+  before_action :find_archive, only: [:update, :show]
 
   def index
     @archives = (1..12).map do |month|
@@ -8,10 +8,14 @@ class ArchivesController < ApplicationController
     end
   end
 
+  def show
+    render partial: 'archives/button_status', locals: { archive: archive }
+  end
+
   def update
     archive.transition_to :generating
     CreateArchive.perform_async(archive.id)
-    redirect_to :back
+    render json: archive
   end
 
 private

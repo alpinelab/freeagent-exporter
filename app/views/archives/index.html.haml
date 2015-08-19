@@ -11,4 +11,4 @@
       %tr.archive{id: "archive-#{archive.id}"}
         %th= Date::MONTHNAMES[archive.month]
         %td{class: "status status-#{archive.current_state}"}= archive.current_state.titleize
-        %td= archive_action_link(archive)
+        %td.status-button= render partial: 'button_status', locals: {archive: archive}
