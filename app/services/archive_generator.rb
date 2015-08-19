@@ -27,8 +27,8 @@ private
   def add_bills
     bank_transactions.each do |bank_transaction|
       bank_transaction.bank_transaction_explanations.each do |explanation|
-        ArchiveDocument::Explanation.new(explanation).add_to_archive(zipfile) if explanation.attachment.present?
-        ArchiveDocument::Bill.new(explanation.paid_bill, explanation).add_to_archive(zipfile) if explanation.paid_bill.present? && explanation.paid_bill.attachment.present?
+        ArchiveDocument::Explanation.new(explanation).add_to_archive(zipfile)
+        ArchiveDocument::Bill.new(explanation.paid_bill, explanation).add_to_archive(zipfile) if explanation.paid_bill.present?
       end
     end
   end
