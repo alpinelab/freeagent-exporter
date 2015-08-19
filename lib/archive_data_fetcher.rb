@@ -17,7 +17,7 @@ class ArchiveDataFetcher
   end
 
   def invoices
-    FreeAgent::Invoice.filter_by_time(archive.start_date, archive.end_date)
+    FreeAgent::Invoice.filter_by_date(archive.start_date, archive.end_date)
   end
 
 private
