@@ -301,11 +301,5 @@ DEPENDENCIES
   statesman
   uglifier (~> 1.3)
   webmock
-<<<<<<< HEAD
   wkhtmltopdf-binary-edge (~> 0.12.2.1)
   wkhtmltopdf-heroku
-=======
-
-BUNDLED WITH
-   1.10.5
->>>>>>> generate csv + add links
