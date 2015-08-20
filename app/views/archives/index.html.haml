@@ -1,9 +1,10 @@
 = render partial: "year_switcher"
 
+= form_tag '/archives', remote: true
 %h1
   = "Archives #{@year}"
   = render partial: "account_switcher"
-
+  = submit_tag 'Generate Selected Archives'
 .row
   %table.table.table-hover#archives
     %tbody
