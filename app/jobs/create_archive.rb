@@ -7,8 +7,10 @@ class CreateArchive
     @archive = Archive.find(archive_id)
     archive.update_attributes(transactions_left_to_explain: transactions_left_to_explain)
     if transactions_left_to_explain == 0
-      zipfile = ArchiveGenerator.call(archive, bank_transactions, expenses, invoices)
-      ArchiveUploader.call(archive, zipfile)
+      archive_generator = ArchiveGenerator.new(archive, bank_transactions, expenses, invoices)
+      zip_url = Uploader.call(archive, archive_generator.zipfile.name)
+      csv_url = Uploader.call(archive, archive_generator.csv.path)
+      archive.update_attributes(csv_url: csv_url, zip_url: zip_url)
       archive.transition_to :ready
     else
       archive.transition_to :failed

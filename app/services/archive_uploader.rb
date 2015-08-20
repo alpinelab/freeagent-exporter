@@ -1,23 +1,24 @@
-class ArchiveUploader
-  attr_reader :archive, :zipfile
+class Uploader
+  attr_reader :archive, :file_path
 
-  def initialize(archive, zipfile)
+  def initialize(archive, file_path)
     @archive = archive
-    @zipfile = zipfile
+    @file_path = file_path
   end
 
   def call
-    archive.update_attributes(s3_url: s3_obj.public_url) if s3_obj.upload_file(zipfile.name)
+    s3_obj.upload_file(file_path)
+    s3_obj.public_url
   end
 
-  def self.call(archive, zipfile)
-    new(archive, zipfile).call
+  def self.call(archive, file_path)
+    new(archive, file_path).call
   end
 
 protected
 
   def filename
-    @filename ||= File.basename(zipfile.name)
+    @filename ||= File.basename(file_path)
   end
 
   def s3_path
