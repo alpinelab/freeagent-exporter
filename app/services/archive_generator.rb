@@ -10,21 +10,20 @@ class ArchiveGenerator
     @bank_transactions = bank_transactions
     @expenses          = expenses
     @invoices          = invoices
+  end
 
+  def call
     add_bills
     add_expenses
     add_invoices
+    add_csv
     zipfile
-    csv.close
   end
 
-  def csv
-    @csv ||= CSV.open(Rails.root.join('tmp', 'csv', csv_filename), "wb")
+  def self.call(archive, bank_transactions, expenses, invoices)
+    new(archive, bank_transactions, expenses, invoices).call
   end
 
-  def zipfile
-    @zipfile ||= Zip::File.open(Rails.root.join('tmp', 'archives', filename), Zip::File::CREATE)
-  end
 private
 
   def add_bills
@@ -48,12 +47,22 @@ private
     end
   end
 
+  def add_csv
+    zipfile.file.open('content.csv', "w") do |file|
+      file << csv.map{ |line| CSV.generate_line(line) }.join
+    end
+    zipfile.commit
+  end
+
   def filename
     @filename ||= "#{archive.year}-#{format('%02d', archive.month)}-#{SecureRandom.uuid}.zip"
   end
 
-  def csv_filename
-    @csv_filename ||= "#{archive.year}-#{format('%02d', archive.month)}-#{SecureRandom.uuid}.csv"
+  def csv
+    @csv ||= []
   end
 
+  def zipfile
+    @zipfile ||= Zip::File.open(Rails.root.join('tmp', 'archives', filename), Zip::File::CREATE)
+  end
 end
