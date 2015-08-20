@@ -8,6 +8,8 @@ class ArchiveDocument::Base
   end
 
   def add_to_archive(zipfile)
+    return if content.nil?
+
     zipfile.file.open("#{path}/#{filename}", "w") do |file|
       file << content
     end
