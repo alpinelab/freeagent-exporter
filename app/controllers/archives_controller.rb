@@ -15,6 +15,14 @@ class ArchivesController < ApplicationController
     end
   end
 
+  def show
+    redirect_to archives_path if @archive.s3_url.empty?
+    respond_to do |format|
+      format.html { redirect_to @archive.s3_url }
+      format.csv { send_data @archive.to_csv, filename: 'test.csv' }
+    end
+  end
+
   def update
     archive.transition_to :generating
     CreateArchive.perform_async(archive.id)

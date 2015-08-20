@@ -9,3 +9,4 @@
     %tbody
     - @archives.each do |archive|
       %tr.archive{id: "archive-#{archive.id}"}= render partial: 'show', locals: {archive: archive}
+
