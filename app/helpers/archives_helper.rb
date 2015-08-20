@@ -15,6 +15,17 @@ module ArchivesHelper
     end
   end
 
+  def archive_delete_link(archive)
+    link_to(
+      content_tag(:span, "", class: %w{glyphicon glyphicon-remove}) + " Delete Archive",
+      archive,
+      class: %w{btn btn-sm btn-danger},
+      method: :delete,
+      data: { confirm: t("archives.index.delete_archive") },
+      title: t("archives.index.delete_archive")
+    ) unless archive.s3_url.nil?
+  end
+
   def download_button(archive)
     link_to(
       content_tag(:span, "", class: %w{glyphicon glyphicon-download-alt}) + " Download Archive",
@@ -49,7 +60,7 @@ module ArchivesHelper
       content_tag(:span, "", class: %w{glyphicon glyphicon-repeat}) + " Try to generate again",
       archive,
       method: 'PUT',
-      class: %w{btn btn-sm btn-danger},
+      class: %w{btn btn-sm btn-warning},
       title: failure_reason(archive)
     )
   end

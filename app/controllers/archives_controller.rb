@@ -1,6 +1,6 @@
 class ArchivesController < ApplicationController
   before_action :find_account, only: :index
-  before_action :find_archive, only: [:update, :show]
+  before_action :find_archive, only: [:update, :show, :destroy]
 
   def index
     @archives = (1..12).map do |month|
@@ -15,6 +15,12 @@ class ArchivesController < ApplicationController
   def update
     archive.transition_to :generating
     CreateArchive.perform_async(archive.id)
+    redirect_to :back
+  end
+
+  def destroy
+    ArchiveDestroyer.(archive)
+    archive.transition_to :pending
     redirect_to :back
   end
 
