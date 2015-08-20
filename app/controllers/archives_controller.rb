@@ -1,11 +1,15 @@
 class ArchivesController < ApplicationController
   before_action :find_account, only: :index
-  before_action :find_archive, only: :update
+  before_action :find_archive, only: [:update, :show]
 
   def index
     @archives = (1..12).map do |month|
       Archive.find_or_create_by!(bank_account: account, year: year, month: month)
     end
+  end
+
+  def show
+    render partial: 'archives/button_status', locals: { archive: archive }
   end
 
   def update
