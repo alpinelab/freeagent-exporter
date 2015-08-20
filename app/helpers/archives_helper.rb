@@ -8,10 +8,10 @@ module ArchivesHelper
     end
   end
 
-  def explanation_status(archive)
+  def status_explanation(archive)
     case archive.current_state.to_sym
-      when :failed then failure_reason(archive)
-      when :generating then generating_since(archive)
+      when :failed      then failure_reason(archive)
+      when :generating  then generating_since(archive)
     end
   end
 

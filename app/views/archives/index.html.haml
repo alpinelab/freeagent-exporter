@@ -8,4 +8,4 @@
   %table.table.table-hover#archives
     %tbody
     - @archives.each do |archive|
-      %tr.archive{id: "archive-#{archive.id}"}= render partial: 'archive', locals: {archive: archive}
+      %tr.archive{id: "archive-#{archive.id}"}= render partial: 'show', locals: {archive: archive}

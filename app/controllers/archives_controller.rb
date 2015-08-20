@@ -9,7 +9,7 @@ class ArchivesController < ApplicationController
   end
 
   def show
-    render partial: 'archives/archive', locals: { archive: archive }
+    render partial: 'archives/show', locals: { archive: archive }
   end
 
   def update
