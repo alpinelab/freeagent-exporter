@@ -19,16 +19,19 @@ module ArchivesHelper
 
   def generation_loader(archive)
     content_tag(:span,
-      content_tag(:span, "", class: %w{glyphicon glyphicon-cog glyphicon-spin}) + " generating",
+      content_tag(:span, "", class: %w{glyphicon glyphicon-cog glyphicon-spin}) + " generating" + reload_script(archive),
       title: t("archives.index.started_at", time: time_ago_in_words(archive.last_transition.updated_at))
     )
+  end
+
+  def reload_script(archive)
+    javascript_tag("reload_button(#{archive.id});")
   end
 
   def generate_button(archive)
     link_to(
       content_tag(:span, "", class: %w{glyphicon glyphicon-cog}) + " Generate Archive",
       archive,
-      remote: true,
       method: 'PUT',
       class: %w{btn btn-sm btn-primary}
     )
@@ -38,7 +41,6 @@ module ArchivesHelper
     link_to(
       content_tag(:span, "", class: %w{glyphicon glyphicon-repeat}) + " Try to generate again",
       archive,
-      remote: true,
       method: 'PUT',
       class: %w{btn btn-sm btn-danger},
       title: failure_reason(archive)

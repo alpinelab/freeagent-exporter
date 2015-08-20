@@ -15,7 +15,7 @@ class ArchivesController < ApplicationController
   def update
     archive.transition_to :generating
     CreateArchive.perform_async(archive.id)
-    render json: archive
+    redirect_to :back
   end
 
 private
