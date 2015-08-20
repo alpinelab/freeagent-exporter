@@ -4,7 +4,7 @@ module ArchivesHelper
     when :pending    then generate_button(archive)
     when :failed     then check_explanations_button(archive)
     when :generating then generation_loader(archive)
-    when :ready      then download_zip_button(archive)
+    when :ready      then download_button(archive)
     end
   end
 
@@ -15,22 +15,13 @@ module ArchivesHelper
     end
   end
 
-  def download_zip_button(archive)
+  def download_button(archive)
     link_to(
       content_tag(:span, "", class: %w{glyphicon glyphicon-download-alt}) + " Download Archive",
-      archive.zip_url,
+      archive.s3_url,
       class: %w{btn btn-sm btn-success},
       title: t("archives.index.generated_at", time: time_ago_in_words(archive.last_transition.updated_at))
     )
-  end
-
-  def download_csv_button(archive)
-    link_to(
-      content_tag(:span, "", class: %w{glyphicon glyphicon-download-alt}) + " Download CSV",
-      archive.csv_url,
-      class: %w{btn btn-sm btn-success},
-      title: t("archives.index.generated_at", time: time_ago_in_words(archive.last_transition.updated_at))
-    ) if archive.current_state.to_sym == :ready
   end
 
   def generation_loader(archive)

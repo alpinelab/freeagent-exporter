@@ -1,5 +1,4 @@
 %th.col-xs-2= Date::MONTHNAMES[archive.month]
 %td.col-xs-2{class: "status status-#{archive.current_state}"}= archive.current_state.titleize
 %td.col-xs-4= status_explanation(archive)
-%td.col-xs-1= archive_action_link(archive)
-%td.col-xs-1= download_csv_button(archive)
+%td.col-xs-2= archive_action_link(archive)
