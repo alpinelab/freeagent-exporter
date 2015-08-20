@@ -8,8 +8,11 @@ module ArchivesHelper
     end
   end
 
-  def explanation_if_failure(archive)
-    failure_reason(archive) if archive.current_state.to_sym == :failed
+  def status_explanation(archive)
+    case archive.current_state.to_sym
+      when :failed      then failure_reason(archive)
+      when :generating  then generating_since(archive)
+    end
   end
 
   def download_button(archive)
@@ -24,7 +27,7 @@ module ArchivesHelper
   def generation_loader(archive)
     content_tag(:span,
       content_tag(:span, "", class: %w{glyphicon glyphicon-cog glyphicon-spin}) + " generating" + reload_script(archive),
-      title: t("archives.index.started_at", time: time_ago_in_words(archive.last_transition.updated_at))
+      title: generating_since(archive)
     )
   end
 
@@ -49,6 +52,10 @@ module ArchivesHelper
       class: %w{btn btn-sm btn-danger},
       title: failure_reason(archive)
     )
+  end
+
+  def generating_since(archive)
+     t("archives.index.started_at", time: time_ago_in_words(archive.last_transition.updated_at))
   end
 
   def failure_reason(archive)

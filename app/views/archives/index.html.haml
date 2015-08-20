@@ -8,8 +8,4 @@
   %table.table.table-hover#archives
     %tbody
     - @archives.each do |archive|
-      %tr.archive{id: "archive-#{archive.id}"}
-        %th= Date::MONTHNAMES[archive.month]
-        %td{class: "status status-#{archive.current_state}"}= archive.current_state.titleize
-        %td.col-xs-4= explanation_if_failure(archive)
-        %td.status-button= render partial: 'button_status', locals: {archive: archive}
+      %tr.archive{id: "archive-#{archive.id}"}= render partial: 'show', locals: {archive: archive}
