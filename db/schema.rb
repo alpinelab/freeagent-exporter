@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150810211936) do
+ActiveRecord::Schema.define(version: 20150820115253) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,13 +30,14 @@ ActiveRecord::Schema.define(version: 20150810211936) do
   add_index "archive_transitions", ["archive_id", "sort_key"], name: "index_archive_transitions_parent_sort", unique: true, using: :btree
 
   create_table "archives", force: true do |t|
-    t.text     "s3_url"
+    t.text     "zip_url"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "bank_account_id"
     t.integer  "transactions_left_to_explain"
     t.integer  "month"
     t.integer  "year"
+    t.text     "csv_url"
   end
 
   add_index "archives", ["bank_account_id"], name: "index_archives_on_bank_account_id", using: :btree
