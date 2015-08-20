@@ -16,7 +16,7 @@ class ArchiveGenerator
     add_bills
     add_expenses
     add_invoices
-    add_csv
+    add_csv_to_zip
     zipfile
   end
 
@@ -29,25 +29,25 @@ private
   def add_bills
     bank_transactions.each do |bank_transaction|
       bank_transaction.bank_transaction_explanations.each do |explanation|
-        ArchiveDocument::Explanation.new(explanation).add_to_archive(zipfile, csv)
-        ArchiveDocument::Bill.new(explanation.paid_bill, explanation).add_to_archive(zipfile, csv) if explanation.paid_bill.present?
+        ArchiveDocument::Explanation.new(explanation).add_to_archive_and_csv(zipfile, csv)
+        ArchiveDocument::Bill.new(explanation.paid_bill, explanation).add_to_archive_and_csv(zipfile, csv) if explanation.paid_bill.present?
       end
     end
   end
 
   def add_expenses
     expenses.each do |expense|
-      ArchiveDocument::Expense.new(expense).add_to_archive(zipfile, csv)
+      ArchiveDocument::Expense.new(expense).add_to_archive_and_csv(zipfile, csv)
     end
   end
 
   def add_invoices
     invoices.each do |invoice|
-      ArchiveDocument::Invoice.new(invoice).add_to_archive(zipfile, csv)
+      ArchiveDocument::Invoice.new(invoice).add_to_archive_and_csv(zipfile, csv)
     end
   end
 
-  def add_csv
+  def add_csv_to_zip
     zipfile.file.open('content.csv', "w") do |file|
       file << csv.join
     end

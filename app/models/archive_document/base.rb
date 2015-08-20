@@ -7,22 +7,31 @@ class ArchiveDocument::Base
     @document = document
   end
 
-  def add_to_archive(zipfile, csv)
+
+  def add_to_archive_and_csv(zipfile, csv)
     return if content.nil?
 
+    add_to_archive(zipfile)
+    add_to_csv(csv)
+  end
+
+protected
+
+  def add_to_csv(csv)
+    csv << to_csv
+  end
+
+  def add_to_archive(zipfile)
     zipfile.file.open(full_path, "w") do |file|
       file << content
     end
     zipfile.commit
 
-    csv << to_csv
   end
 
   def full_path
     "#{path}/#{filename}"
   end
-
-protected
 
   def filename
     @filename ||= "#{document.id}-#{type}.#{extension}"
