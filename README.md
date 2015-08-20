@@ -9,9 +9,9 @@ Freeagent Exporter conects to your FreeAgent account and lets you download month
 ## Supported documents
 
 - [x] Bank transaction explainations
-- [ ] Bills
+- [x] Bills
 - [x] Expenses
-- [ ] Invoices
+- [x] Invoices
 
 ## Recording API responses for stubbing
 
