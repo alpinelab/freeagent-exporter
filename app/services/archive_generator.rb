@@ -30,26 +30,26 @@ private
     bank_transactions.each do |bank_transaction|
       bank_transaction.bank_transaction_explanations.each do |explanation|
         ArchiveDocument::Explanation.new(explanation).add_to_archive(zipfile, csv)
-        ArchiveDocument::Bill.new(explanation.paid_bill, explanation).add_to_archive(zipfile) if explanation.paid_bill.present?
+        ArchiveDocument::Bill.new(explanation.paid_bill, explanation).add_to_archive(zipfile, csv) if explanation.paid_bill.present?
       end
     end
   end
 
   def add_expenses
     expenses.each do |expense|
-      ArchiveDocument::Expense.new(expense).add_to_archive(zipfile)
+      ArchiveDocument::Expense.new(expense).add_to_archive(zipfile, csv)
     end
   end
 
   def add_invoices
     invoices.each do |invoice|
-      ArchiveDocument::Invoice.new(invoice).add_to_archive(zipfile)
+      ArchiveDocument::Invoice.new(invoice).add_to_archive(zipfile, csv)
     end
   end
 
   def add_csv
     zipfile.file.open('content.csv', "w") do |file|
-      file << csv.map{ |line| CSV.generate_line(line) }.join
+      file << csv.join
     end
     zipfile.commit
   end
@@ -59,7 +59,7 @@ private
   end
 
   def csv
-    @csv ||= []
+    @csv ||= [] << ["date", "description", "amount", "location"].to_csv
   end
 
   def zipfile
