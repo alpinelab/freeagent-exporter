@@ -26,10 +26,14 @@ protected
   end
 
   def add_file(zipfile)
-    zipfile.file.open("#{path}/#{filename}", "w") do |file|
+    zipfile.file.open(full_path, "w") do |file|
       file << content
     end
     zipfile.commit
+  end
+
+  def full_path
+    "#{path}/#{filename}"
   end
 
   def filename
