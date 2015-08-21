@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     delete "sign_out", to: "devise/sessions#destroy", as: :destroy_session
   end
 
-  resources :archives,      only: %w{index update show}
+  resources :archives,      only: %w{index update show destroy}
   resources :bank_accounts, only: %w{index create destroy}
 
   root "pages#home"

@@ -7,3 +7,4 @@ en:
       no_account: "Please, track at least one bank account."
       no_rights: "Sorry, you do not have sufficient rights to generate this archive."
       started_at: "Started %{time} ago"
+      delete_archive: "Delete this archive?"

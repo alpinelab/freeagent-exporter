@@ -8,6 +8,6 @@ class ArchiveStateMachine
 
   transition from: :pending,    to: :generating
   transition from: :generating, to: [:ready, :failed]
-  transition from: :ready,      to: :generating
+  transition from: :ready,      to: [:generating, :pending]
   transition from: :failed,     to: :generating
 end
