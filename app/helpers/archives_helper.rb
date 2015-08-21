@@ -24,6 +24,16 @@ module ArchivesHelper
     )
   end
 
+  def check_box(archive)
+    check_box_tag(
+      "archive_ids[#{archive.id}]",
+      archive.id,
+      false,
+      disabled: archive.current_state.to_sym == :ready,
+      autocomplete: 'off'
+    )
+  end
+
   def generation_loader(archive)
     content_tag(:span,
       content_tag(:span, "", class: %w{glyphicon glyphicon-cog glyphicon-spin}) + " generating" + reload_script(archive),

@@ -1,6 +1,7 @@
 class ArchivesController < ApplicationController
   before_action :find_account, only: :index
   before_action :find_archive, only: [:update, :show]
+  before_action :find_archives_array, only: :batch
 
   def index
     @archives = (1..12).map do |month|
@@ -12,6 +13,16 @@ class ArchivesController < ApplicationController
     render partial: 'archives/show', locals: { archive: archive }
   end
 
+  def batch
+    params[:archive_ids].each do |id|
+      if archive = Archive.find_by(id: id.first)
+        archive.transition_to :generating
+        CreateArchive.perform_async(archive.id)
+      end
+    end
+    redirect_to :back
+  end
+
   def update
     archive.transition_to :generating
     CreateArchive.perform_async(archive.id)
@@ -19,6 +30,9 @@ class ArchivesController < ApplicationController
   end
 
 private
+  def find_archives_array
+    redirect_to :back if params[:archive_ids].nil?
+  end
 
   def find_archive
     redirect_to archives_path, notice: t(".no_rights") unless archive.present? && current_user.can_generate?(archive)

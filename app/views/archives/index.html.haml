@@ -1,12 +1,18 @@
 = render partial: "year_switcher"
 
-= form_tag '/archives', remote: true
-%h1
-  = "Archives #{@year}"
-  = render partial: "account_switcher"
-  = submit_tag 'Generate Selected Archives'
-.row
-  %table.table.table-hover#archives
-    %tbody
-    - @archives.each do |archive|
-      %tr.archive{id: "archive-#{archive.id}"}= render partial: 'show', locals: {archive: archive}
+= form_tag archives_batch_path do
+  .row
+    .col-xs-3
+      %h1
+        = "Archives #{@year}"
+        = render partial: "account_switcher"
+    .generate-batch
+      .col-xs-offset-6.col-xs-1
+        = button_tag 'Select All', class: "btn btn-default", id: "select_all", type: 'button'
+      .col-xs-1
+        = submit_tag 'Generate selected archives', class: "btn btn-default"
+  .row
+    %table.table.table-hover#archives
+      %tbody
+      - @archives.each do |archive|
+        %tr.archive{id: "archive-#{archive.id}"}= render partial: 'show', locals: {archive: archive}
