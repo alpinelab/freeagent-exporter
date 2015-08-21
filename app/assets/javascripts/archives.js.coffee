@@ -8,3 +8,7 @@ $ ->
   $('#select_all').click (event) ->
     $(':checkbox:not(:disabled)').each ->
       @checked = true
+  $('#unselect_all').click (event) ->
+    $(':checkbox').each ->
+      @checked = false
+      return

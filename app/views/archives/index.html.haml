@@ -7,9 +7,11 @@
         = "Archives #{@year}"
         = render partial: "account_switcher"
     .generate-batch
-      .col-xs-offset-6.col-xs-1
-        = button_tag 'Select All', class: "btn btn-default", id: "select_all", type: 'button'
+      .col-xs-offset-4.col-xs-1
+        = button_tag 'Unselect All', class: "btn btn-default", id: "unselect_all", type: 'button'
       .col-xs-1
+        = button_tag 'Select All', class: "btn btn-default", id: "select_all", type: 'button'
+      .col-xs-2
         = submit_tag 'Generate selected archives', class: "btn btn-default"
   .row
     %table.table.table-hover#archives
