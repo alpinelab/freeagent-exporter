@@ -1,5 +1,9 @@
 class ArchiveDocument::Invoice < ArchiveDocument::Base
 
+  def to_csv
+    [document.dated_on, document.reference, document.net_value, full_path].to_csv
+  end
+
 protected
 
   def content

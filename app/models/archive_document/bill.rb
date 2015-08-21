@@ -6,6 +6,10 @@ class ArchiveDocument::Bill < ArchiveDocument::Base
     super(bill)
   end
 
+  def to_csv
+    [document.dated_on, document.reference, document.total_value, full_path].to_csv
+  end
+
 protected
 
   def filename
