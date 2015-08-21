@@ -16,7 +16,6 @@ class ArchiveGenerator
     add_bills
     add_expenses
     add_invoices
-    add_csv_to_zip
     zipfile
   end
 
@@ -29,40 +28,39 @@ private
   def add_bills
     bank_transactions.each do |bank_transaction|
       bank_transaction.bank_transaction_explanations.each do |explanation|
-        ArchiveDocument::Explanation.new(explanation).add_to_archive_and_csv(zipfile, csv)
-        ArchiveDocument::Bill.new(explanation.paid_bill, explanation).add_to_archive_and_csv(zipfile, csv) if explanation.paid_bill.present?
+        ArchiveDocument::Explanation.new(explanation).add_to_archive_and_csv(zipfile, csv_filename)
+        ArchiveDocument::Bill.new(explanation.paid_bill, explanation).add_to_archive_and_csv(zipfile, csv_filename) if explanation.paid_bill.present?
       end
     end
   end
 
   def add_expenses
     expenses.each do |expense|
-      ArchiveDocument::Expense.new(expense).add_to_archive_and_csv(zipfile, csv)
+      ArchiveDocument::Expense.new(expense).add_to_archive_and_csv(zipfile, csv_filename)
     end
   end
 
   def add_invoices
     invoices.each do |invoice|
-      ArchiveDocument::Invoice.new(invoice).add_to_archive_and_csv(zipfile, csv)
+      ArchiveDocument::Invoice.new(invoice).add_to_archive_and_csv(zipfile, csv_filename)
     end
-  end
-
-  def add_csv_to_zip
-    zipfile.file.open('content.csv', "w") do |file|
-      file << csv.join
-    end
-    zipfile.commit
   end
 
   def filename
     @filename ||= "#{archive.year}-#{format('%02d', archive.month)}-#{SecureRandom.uuid}.zip"
   end
 
-  def csv
-    @csv ||= [] << ["date", "description", "amount", "location"].to_csv
+  def csv_filename
+    @csv_filename ||= "#{Date::MONTHNAMES[archive.month]}.csv"
   end
 
   def zipfile
-    @zipfile ||= Zip::File.open(Rails.root.join('tmp', 'archives', filename), Zip::File::CREATE)
+    @zipfile ||= Zip::File.open(Rails.root.join('tmp', 'archives', filename), Zip::File::CREATE) do |zipfile|
+      zipfile.file.open(csv_filename, "w") do |file|
+        file << ["date", "description", "amount", "location"].to_csv
+      end
+      zipfile.commit
+      zipfile
+    end
   end
 end

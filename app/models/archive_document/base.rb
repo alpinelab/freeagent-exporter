@@ -12,13 +12,17 @@ class ArchiveDocument::Base
     return if content.nil?
 
     add_to_archive(zipfile)
-    add_to_csv(csv)
+    add_to_csv(zipfile, csv)
   end
 
 protected
 
-  def add_to_csv(csv)
-    csv << to_csv
+  def add_to_csv(zipfile, csv)
+    csv_content = zipfile.file.read(csv) + to_csv
+    zipfile.file.open(csv, "w") do |file|
+      file << csv_content
+    end
+    zipfile.commit
   end
 
   def add_to_archive(zipfile)
@@ -26,7 +30,6 @@ protected
       file << content
     end
     zipfile.commit
-
   end
 
   def full_path
