@@ -1,4 +1,4 @@
-class ArchiveRemote::Base
+module RemoteArchive::Base
 
   def initialize(archive)
     @archive = archive

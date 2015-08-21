@@ -1,4 +1,5 @@
-class ArchiveRemote::Uploader < ArchiveRemote::Base
+class RemoteArchive::Uploader
+  include RemoteArchive::Base
   attr_reader :archive, :zipfile
 
   def initialize(archive, zipfile)

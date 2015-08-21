@@ -1,4 +1,5 @@
-class ArchiveRemote::Destroyer < ArchiveRemote::Base
+class RemoteArchive::Destroyer
+  include RemoteArchive::Base
   attr_reader :archive
 
   def call

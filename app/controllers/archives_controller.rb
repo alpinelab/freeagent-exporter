@@ -19,7 +19,7 @@ class ArchivesController < ApplicationController
   end
 
   def destroy
-    ArchiveRemote::Destroyer.call(archive)
+    RemoteArchive::Destroyer.call(archive)
     archive.transition_to :pending
     redirect_to :back
   end
