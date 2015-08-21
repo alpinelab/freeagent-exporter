@@ -17,13 +17,13 @@ module ArchivesHelper
 
   def archive_delete_link(archive)
     link_to(
-      content_tag(:span, "", class: %w{glyphicon glyphicon-remove}) + " Delete Archive",
+      content_tag(:span, "", class: %w{glyphicon glyphicon-trash}) + " Delete Archive",
       archive,
       class: %w{btn btn-sm btn-danger},
       method: :delete,
       data: { confirm: t("archives.index.delete_archive") },
       title: t("archives.index.delete_archive")
-    ) unless archive.s3_url.nil?
+    ) if archive.current_state_is :ready
   end
 
   def download_button(archive)

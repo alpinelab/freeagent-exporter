@@ -17,6 +17,10 @@ class Archive < ActiveRecord::Base
     start_date.at_end_of_month
   end
 
+  def current_state_is(state)
+    current_state.to_sym == state
+  end
+
   def state_machine
     @state_machine ||= ArchiveStateMachine.new(self, transition_class: ArchiveTransition)
   end
