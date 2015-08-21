@@ -1,7 +1,7 @@
 class ArchivesController < ApplicationController
   before_action :find_account, only: :index
   before_action :find_archive, only: [:update, :show]
-  before_action :find_archives_array, only: :batch
+  before_action :find_archives, only: :batch_update
 
   def index
     @archives = (1..12).map do |month|
@@ -13,25 +13,27 @@ class ArchivesController < ApplicationController
     render partial: 'archives/show', locals: { archive: archive }
   end
 
-  def batch
-    params[:archive_ids].each do |id|
-      if archive = Archive.find_by(id: id.first)
-        archive.transition_to :generating
-        CreateArchive.perform_async(archive.id)
-      end
+  def batch_update
+    archives.each do |archive|
+      start_generating archive
     end
     redirect_to :back
   end
 
   def update
-    archive.transition_to :generating
-    CreateArchive.perform_async(archive.id)
+    start_generating archive
     redirect_to :back
   end
 
 private
-  def find_archives_array
-    redirect_to :back if params[:archive_ids].nil?
+
+  def start_generating(archive)
+    archive.transition_to :generating
+    CreateArchive.perform_async(archive.id)
+  end
+
+  def find_archives
+    redirect_to :back if archives.blank?
   end
 
   def find_archive
@@ -40,6 +42,10 @@ private
 
   def find_account
     redirect_to bank_accounts_path, notice: t(".no_account") unless account.present?
+  end
+
+  def archives
+    @archives ||= Archive.where(id: params[:archive_ids].map {|id| id.first})
   end
 
   def account
