@@ -8,7 +8,7 @@ class CreateArchive
     archive.update_attributes(transactions_left_to_explain: transactions_left_to_explain)
     if transactions_left_to_explain == 0
       zipfile = ArchiveGenerator.call(archive, bank_transactions, expenses, invoices)
-      ArchiveUploader.call(archive, zipfile)
+      RemoteArchive::Uploader.call(archive, zipfile)
       archive.transition_to :ready
     else
       archive.transition_to :failed
