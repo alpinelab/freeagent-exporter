@@ -45,8 +45,8 @@ private
   end
 
   def archives
-    return nil if params[:archive_ids].nil?
-    @archives ||= Archive.where(id: params[:archive_ids].map {|id| id.first})
+    return nil if params[:archive_ids].blank?
+    @archives ||= Archive.where(id: params[:archive_ids].map(&:first))
   end
 
   def account
