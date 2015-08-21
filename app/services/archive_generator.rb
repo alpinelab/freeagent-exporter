@@ -28,21 +28,21 @@ private
   def add_bills
     bank_transactions.each do |bank_transaction|
       bank_transaction.bank_transaction_explanations.each do |explanation|
-        ArchiveDocument::Explanation.new(explanation).add_to_archive_and_csv(zipfile, csv_filename)
-        ArchiveDocument::Bill.new(explanation.paid_bill, explanation).add_to_archive_and_csv(zipfile, csv_filename) if explanation.paid_bill.present?
+        ArchiveDocument::Explanation.new(explanation).add_to_archive(zipfile, csv_filename)
+        ArchiveDocument::Bill.new(explanation.paid_bill, explanation).add_to_archive(zipfile, csv_filename) if explanation.paid_bill.present?
       end
     end
   end
 
   def add_expenses
     expenses.each do |expense|
-      ArchiveDocument::Expense.new(expense).add_to_archive_and_csv(zipfile, csv_filename)
+      ArchiveDocument::Expense.new(expense).add_to_archive(zipfile, csv_filename)
     end
   end
 
   def add_invoices
     invoices.each do |invoice|
-      ArchiveDocument::Invoice.new(invoice).add_to_archive_and_csv(zipfile, csv_filename)
+      ArchiveDocument::Invoice.new(invoice).add_to_archive(zipfile, csv_filename)
     end
   end
 

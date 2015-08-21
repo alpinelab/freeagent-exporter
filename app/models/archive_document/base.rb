@@ -8,10 +8,10 @@ class ArchiveDocument::Base
   end
 
 
-  def add_to_archive_and_csv(zipfile, csv)
+  def add_to_archive(zipfile, csv)
     return if content.nil?
 
-    add_to_archive(zipfile)
+    add_file(zipfile)
     add_to_csv(zipfile, csv)
   end
 
@@ -25,15 +25,11 @@ protected
     zipfile.commit
   end
 
-  def add_to_archive(zipfile)
-    zipfile.file.open(full_path, "w") do |file|
+  def add_file(zipfile)
+    zipfile.file.open("#{path}/#{filename}", "w") do |file|
       file << content
     end
     zipfile.commit
-  end
-
-  def full_path
-    "#{path}/#{filename}"
   end
 
   def filename
