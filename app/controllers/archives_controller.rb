@@ -1,5 +1,6 @@
 class ArchivesController < ApplicationController
   before_action :find_account, only: :index
+  before_action :find_archives, only: :batch_update
   before_action :find_archive, only: [:update, :show, :destroy]
 
   def index
@@ -12,9 +13,15 @@ class ArchivesController < ApplicationController
     render partial: 'archives/show', locals: { archive: archive }
   end
 
+  def batch_update
+    archives.each do |archive|
+      start_generating archive
+    end
+    redirect_to :back
+  end
+
   def update
-    archive.transition_to :generating
-    CreateArchive.perform_async(archive.id)
+    start_generating archive
     redirect_to :back
   end
 
@@ -26,12 +33,26 @@ class ArchivesController < ApplicationController
 
 private
 
+  def start_generating(archive)
+    archive.transition_to :generating
+    CreateArchive.perform_async(archive.id)
+  end
+
+  def find_archives
+    redirect_to :back if archives.blank?
+  end
+
   def find_archive
     redirect_to archives_path, notice: t(".no_rights") unless archive.present? && current_user.can_generate?(archive)
   end
 
   def find_account
     redirect_to bank_accounts_path, notice: t(".no_account") unless account.present?
+  end
+
+  def archives
+    return nil if params[:archive_ids].blank?
+    @archives ||= Archive.where(id: params[:archive_ids].map(&:first))
   end
 
   def account
