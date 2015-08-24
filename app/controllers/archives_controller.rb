@@ -1,8 +1,8 @@
 class ArchivesController < ApplicationController
-  before_action :find_account, only: :index
-  before_action :find_archives, only: :batch_update
-  before_action :find_archive, only: [:update, :show, :destroy, :cancel]
-  before_action :find_operation, only: [:batch_update, :update]
+  before_action :find_account,    only: :index
+  before_action :find_archives,   only: :batch_update
+  before_action :find_archive,    only: [:update, :show, :destroy, :cancel]
+  before_action :find_operation,  only: [:batch_update, :update]
 
   def index
     @archives = (1..12).map do |month|
@@ -35,7 +35,7 @@ class ArchivesController < ApplicationController
 private
 
   def start_or_cancel(archive)
-    start_generating archive if params[:operation] == 'start'
+    start_generating archive  if params[:operation] == 'start'
     cancel_generating archive if params[:operation] == 'cancel'
   end
 
