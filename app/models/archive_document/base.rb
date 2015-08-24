@@ -18,7 +18,7 @@ class ArchiveDocument::Base
 protected
 
   def add_to_csv(zipfile, csv)
-    csv_content = zipfile.file.read(csv) + to_csv
+    csv_content = zipfile.file.read(csv).force_encoding('UTF-8') + to_csv.force_encoding('UTF-8')
     zipfile.file.open(csv, "w") do |file|
       file << csv_content
     end
