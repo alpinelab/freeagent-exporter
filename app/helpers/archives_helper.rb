@@ -25,9 +25,9 @@ module ArchivesHelper
   def archive_cancel_link(archive)
     link_to(
       content_tag(:span, "", class: %w{glyphicon glyphicon-remove}) + " Cancel",
-      cancel_archive_generate_path(archive),
+      archive_action_path({id: archive.id, operation: :cancel}),
       class: %w{btn btn-sm btn-danger},
-      method: :delete,
+      method: :put,
       title: 'Cancel'
     )
   end
@@ -35,7 +35,7 @@ module ArchivesHelper
   def archive_delete_link(archive)
     link_to(
       content_tag(:span, "", class: %w{glyphicon glyphicon-trash}) + " Delete Archive",
-      archive,
+      archive_path(archive),
       class: %w{btn btn-sm btn-danger},
       method: :delete,
       data: { confirm: t("archives.index.delete_archive") },
@@ -76,8 +76,8 @@ module ArchivesHelper
   def generate_button(archive)
     link_to(
       content_tag(:span, "", class: %w{glyphicon glyphicon-cog}) + " Generate Archive",
-      archive,
-      method: 'PUT',
+      archive_action_path({id: archive.id, operation: :start}),
+      method: :put,
       class: %w{btn btn-sm btn-primary}
     )
   end
@@ -85,8 +85,8 @@ module ArchivesHelper
   def check_explanations_button(archive)
     link_to(
       content_tag(:span, "", class: %w{glyphicon glyphicon-repeat}) + " Try to generate again",
-      archive,
-      method: 'PUT',
+      archive_action_path({id: archive.id, operation: :start}),
+      method: :put,
       class: %w{btn btn-sm btn-warning},
       title: failure_reason(archive)
     )
