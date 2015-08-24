@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   end
 
   post        'archives/batch_update',  to: 'archives#batch_update'
+  delete      'archives/:id/cancel',    to: 'archives#cancel', as: :cancel_archive_generate
   resources   :archives,                only: %w{index update show}
   resources   :archives,                only: %w{index update show destroy}
   resources   :bank_accounts,           only: %w{index create destroy}

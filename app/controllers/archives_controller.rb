@@ -1,7 +1,7 @@
 class ArchivesController < ApplicationController
   before_action :find_account, only: :index
   before_action :find_archives, only: :batch_update
-  before_action :find_archive, only: [:update, :show, :destroy]
+  before_action :find_archive, only: [:update, :show, :destroy, :cancel]
 
   def index
     @archives = (1..12).map do |month|
@@ -22,6 +22,12 @@ class ArchivesController < ApplicationController
 
   def update
     start_generating archive
+    redirect_to :back
+  end
+
+  def cancel
+    CreateArchive.cancel!(archive.id)
+    archive.transition_to :pending
     redirect_to :back
   end
 

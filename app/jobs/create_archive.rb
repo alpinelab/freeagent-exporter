@@ -15,6 +15,9 @@ class CreateArchive
     end
   end
 
+  def self.cancel!(archive_id)
+  end
+
 private
 
   def data

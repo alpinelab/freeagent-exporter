@@ -1,10 +1,10 @@
 module ArchivesHelper
   def archive_action_link(archive)
     case archive.current_state.to_sym
-    when :pending    then generate_button(archive)
-    when :failed     then check_explanations_button(archive)
-    when :generating then generation_loader(archive)
-    when :ready      then download_button(archive)
+      when :pending    then generate_button(archive)
+      when :failed     then check_explanations_button(archive)
+      when :generating then generation_loader(archive)
+      when :ready      then download_button(archive)
     end
   end
 
@@ -15,6 +15,23 @@ module ArchivesHelper
     end
   end
 
+  def other_action_link(archive)
+    case archive.current_state.to_sym
+      when :ready       then archive_delete_link(archive)
+      when :generating  then archive_cancel_link(archive)
+    end
+  end
+
+  def archive_cancel_link(archive)
+    link_to(
+      content_tag(:span, "", class: %w{glyphicon glyphicon-remove}) + " Cancel",
+      cancel_archive_generate_path(archive),
+      class: %w{btn btn-sm btn-danger},
+      method: :delete,
+      title: 'Cancel'
+    )
+  end
+
   def archive_delete_link(archive)
     link_to(
       content_tag(:span, "", class: %w{glyphicon glyphicon-trash}) + " Delete Archive",
@@ -23,7 +40,7 @@ module ArchivesHelper
       method: :delete,
       data: { confirm: t("archives.index.delete_archive") },
       title: t("archives.index.delete_archive")
-    ) if archive.current_state_is :ready
+    )
   end
 
   def download_button(archive)
