@@ -19,7 +19,7 @@ class CreateArchive
   def self.cancel!(archive_id)
     workers = Sidekiq::Workers.new
     workers.each do |process_id, thread_id, work|
-      if work['payload']['args'].first == archive_id
+      if work['payload']['class'] == 'CreateArchive' && work['payload']['args'].first == archive_id
         Sidekiq.redis {|c| c.setex("cancelled-#{work['payload']['jid']}", 86400, 1) }
       end
     end
