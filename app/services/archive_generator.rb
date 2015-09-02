@@ -15,6 +15,7 @@ class ArchiveGenerator
   def call
     add_bills
     add_expenses
+    raise "foo"
     add_invoices
     zipfile
   end

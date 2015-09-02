@@ -21,8 +21,17 @@ class CreateArchive
     workers.each do |process_id, thread_id, work|
       if work['payload']['class'] == 'CreateArchive' && work['payload']['args'].first == archive_id
         Sidekiq.redis {|c| c.setex("cancelled-#{work['payload']['jid']}", 86400, 1) }
+        return
       end
     end
+    query = Sidekiq::RetrySet.new
+    query.select do |job|
+      if job.item['class'] == 'CreateArchive' && job.item['args'].first == archive_id
+        Sidekiq.redis {|c| c.setex("cancelled-#{job.item['jid']}", 86400, 1) }
+        return
+      end
+    end
+
   end
 
 private
