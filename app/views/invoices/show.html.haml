@@ -18,7 +18,8 @@
             %th= 'Quantité'
             %th= 'Description'
             %th= 'Prix unitaire HT. (€)'
-            %th= 'Sous-Total (€)'
+            %th= 'TVA'
+            %th= 'Sous-Total HT (€)'
         %tbody
         - if invoice_items.present?
           - invoice_items.each do |item|
@@ -26,13 +27,22 @@
               %td= item.description
               %td= "#{item.quantity} #{item.item_type}"
               %td= item.price
+              %td= "#{item.sales_tax_rate || 0}%"
               %td= item.price * item.quantity
         %tfoot
           %tr
             %td.text-right{ colspan: 3 }
+              Eur HT Total
+            %td= "#{net_value}€"
+          %tr
+            %td.text-right{ colspan: 3 }
+              TVA
+            %td= "#{sales_tax_value || 0}€"
+          %tr
+            %td.text-right{ colspan: 3 }
               %strong Eur Total
             %td
-              %strong= "#{net_value}€"
+              %strong= "#{total_value}€"
       - if bank_transaction_explanations.present?
         %p Modalités de réglement
         %table
