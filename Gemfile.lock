@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/alpinelab/freeagent-api-ruby.git
-  revision: 51f2780f556ac6f610b90bd355678a3fd6d9d66d
+  revision: e92204dc8e14c0d448d10bdf9b534fd9176162e2
   branch: master
   specs:
     freeagent-api-ruby (0.0.1)
@@ -303,3 +303,6 @@ DEPENDENCIES
   webmock
   wkhtmltopdf-binary-edge (~> 0.12.2.1)
   wkhtmltopdf-heroku
+
+BUNDLED WITH
+   1.10.6
