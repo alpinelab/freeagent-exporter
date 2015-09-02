@@ -17,24 +17,25 @@ class CreateArchive
   end
 
   def self.cancel!(archive_id)
-    workers = Sidekiq::Workers.new
-    workers.each do |process_id, thread_id, work|
-      if work['payload']['class'] == 'CreateArchive' && work['payload']['args'].first == archive_id
-        Sidekiq.redis {|c| c.setex("cancelled-#{work['payload']['jid']}", 86400, 1) }
-        return
-      end
-    end
-    query = Sidekiq::RetrySet.new
-    query.select do |job|
-      if job.item['class'] == 'CreateArchive' && job.item['args'].first == archive_id
-        Sidekiq.redis {|c| c.setex("cancelled-#{job.item['jid']}", 86400, 1) }
-        return
-      end
-    end
-
+    insert_cancel_order_in_redis(find_jid(archive_id))
   end
 
 private
+
+  def self.find_jid(archive_id)
+    workers = Sidekiq::Workers.new
+    workers.each do |process_id, thread_id, work|
+      return work['payload']['jid'] if work['payload']['class'] == 'CreateArchive' && work['payload']['args'].first == archive_id
+    end
+    query = Sidekiq::RetrySet.new
+    query.select do |job|
+      return job.item['jid'] if job.item['class'] == 'CreateArchive' && job.item['args'].first == archive_id
+    end
+  end
+
+  def self.insert_cancel_order_in_redis(jid)
+    Sidekiq.redis {|c| c.setex("cancelled-#{jid}", 86400, 1) }
+  end
 
   def cancelled?
     Sidekiq.redis {|c| c.exists("cancelled-#{jid}") }
