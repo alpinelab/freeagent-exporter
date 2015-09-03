@@ -24,9 +24,9 @@ module ArchivesHelper
 
   def archive_cancel_link(archive)
     link_to(
-      content_tag(:span, "", class: %w{glyphicon glyphicon-remove}) + " Cancel",
+      content_tag(:i, "", class: %w{minus circle icon}) + " Cancel",
       archive_action_path({id: archive.id, operation: :cancel}),
-      class: %w{btn btn-sm btn-danger},
+      class: %w{negative ui button},
       method: :put,
       title: 'Cancel'
     )
@@ -34,9 +34,9 @@ module ArchivesHelper
 
   def archive_delete_link(archive)
     link_to(
-      content_tag(:span, "", class: %w{glyphicon glyphicon-trash}) + " Delete Archive",
+      content_tag(:i, "", class: %w{trash icon}) + " Delete Archive",
       archive_path(archive),
-      class: %w{btn btn-sm btn-danger},
+      class: %w{negative ui button},
       method: :delete,
       data: { confirm: t("archives.index.delete_archive") },
       title: t("archives.index.delete_archive")
@@ -45,9 +45,9 @@ module ArchivesHelper
 
   def download_button(archive)
     link_to(
-      content_tag(:span, "", class: %w{glyphicon glyphicon-download-alt}) + " Download Archive",
+      content_tag(:i, "", class: %w{download icon}) + " Download Archive",
       archive.s3_url,
-      class: %w{btn btn-sm btn-success},
+      class: %w{positive ui button},
       title: t("archives.index.generated_at", time: time_ago_in_words(archive.last_transition.updated_at))
     )
   end
@@ -64,7 +64,7 @@ module ArchivesHelper
 
   def generation_loader(archive)
     content_tag(:span,
-      content_tag(:span, "", class: %w{glyphicon glyphicon-cog glyphicon-spin}) + " generating" + reload_script(archive),
+      content_tag(:span, "", class: %w{ui active small inline loader}) + "  generating" + reload_script(archive),
       title: generating_since(archive)
     )
   end
@@ -75,19 +75,19 @@ module ArchivesHelper
 
   def generate_button(archive)
     link_to(
-      content_tag(:span, "", class: %w{glyphicon glyphicon-cog}) + " Generate Archive",
+      content_tag(:i, "", class: %w{icon settings}) + " Generate Archive",
       archive_action_path({id: archive.id, operation: :start}),
       method: :put,
-      class: %w{btn btn-sm btn-primary}
+      class: %w{ui primary button}
     )
   end
 
   def check_explanations_button(archive)
     link_to(
-      content_tag(:span, "", class: %w{glyphicon glyphicon-repeat}) + " Try to generate again",
+      content_tag(:i, "", class: %w{icon repeat}) + " Try to generate again",
       archive_action_path({id: archive.id, operation: :start}),
       method: :put,
-      class: %w{btn btn-sm btn-warning},
+      class: %w{ui yellow button},
       title: failure_reason(archive)
     )
   end
