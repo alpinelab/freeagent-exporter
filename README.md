@@ -1,6 +1,6 @@
 # FreeAgent Exporter
 
-[![Build Status](https://semaphoreci.com/api/v1/projects/0e55d82b-5241-401b-9ee1-5594093b71a5/425544/shields_badge.svg)](https://semaphoreci.com/michaelbaudino/freeagent-exporter)
+[![Build Status](https://codeship.com/projects/feae3660-3545-0133-81c0-224ef9168358/status?branch=develop)](https://codeship.com/projects/100737)
 [![Code Climate](https://codeclimate.com/github/alpinelab/freeagent-exporter/badges/gpa.svg?style=flat-square)](https://codeclimate.com/github/alpinelab/freeagent-exporter)
 [![Test Coverage](https://codeclimate.com/github/alpinelab/freeagent-exporter/badges/coverage.svg)](https://codeclimate.com/github/alpinelab/freeagent-exporter/coverage)
 
