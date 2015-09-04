@@ -1,9 +1,13 @@
-.row.year-switcher
-  .col-xs-6.prev-year
+.row
+  .two.wide.column.left.floated
     = link_to params.merge(year: @year.pred) do
-      %span.glyphicon.glyphicon-backward
+      %i.chevron.left.icon
       = @year.pred
-  .col-xs-6.next-year
+  .three.wide.column.right.aligned
+    %h1= "Archives #{@year}"
+  .five.wide.column
+    = render partial: "account_switcher"
+  .two.wide.column.right.aligned.floated
     = link_to params.merge(year: @year.next) do
       = @year.next
-      %span.glyphicon.glyphicon-forward
+      %i.chevron.right.icon

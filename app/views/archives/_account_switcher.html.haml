@@ -1,8 +1,11 @@
 - if current_user.bank_accounts.count > 1
-  .btn-group
-    %button.btn.btn-default{type: "button"}= @account.name
-    %button.btn.btn-default.dropdown-toggle{type: "button", data: {toggle: "dropdown"}}
-      %span.caret
-    %ul.dropdown-menu
+  .ui.floating.labeled.icon.dropdown.button
+    %i.icon.money
+    %span.text
+      = @account.name
+      %i.dropdown.icon
+    .menu
+      .header
+        Switch to another bank account
       - current_user.bank_accounts.each do |account|
-        %li= link_to account.name, params.merge(account: account)
+        .item= link_to account.name, params.merge(account: account)
