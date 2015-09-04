@@ -1,4 +1,23 @@
-%p
-  Please
-  = link_to "sign in", user_omniauth_authorize_path(:freeagent)
-  via FreeAgent
+.ui.vertical.center.aligned.segment.headbox
+  .ui.text.container
+    .ui.header
+      %h1
+        FreeAgent Exporter
+      %a{href: user_omniauth_authorize_path(:freeagent)}
+        .button.ui.hudge.primary
+          Please Sign In Using FreeAgent
+          %i.right.arrow.icon
+.ui.vertical.stripe.segment
+  .ui.middle.aligned.stackable.grid.container
+    .row
+      .eight.wide.column
+        .ui.header
+          Lorem ipsum
+        %p
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit. Donec et mollis dolor. Praesent et diam eget libero egestas mattis sit amet vitae augue. Nam tincidunt congue enim, ut porta lorem lacinia consectetur. Donec ut libero sed arcu vehicula ultricies a non tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ut gravida lorem. Ut turpis felis, pulvinar a semper sed, adipiscing id dolor. Pellentesque auctor nisi id magna consequat sagittis
+        .ui.header
+          dolor sit amet
+        %p
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit. Donec et mollis dolor. Praesent et diam eget libero egestas mattis sit amet vitae augue. Nam tincidunt congue enim, ut porta lorem lacinia consectetur. Donec ut libero sed arcu vehicula ultricies a non tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ut gravida lorem. Ut turpis felis, pulvinar a semper sed, adipiscing id dolor. Pellentesque auctor nisi id magna consequat sagittis
+      .six.wide.right.floated.column
+        %img.ui.large.bordered.rounded.image{src: '//placekitten.com/796/796'}
