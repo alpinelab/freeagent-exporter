@@ -14,6 +14,6 @@
         .menu
           .header
             actions
-          = link_to '<div class="item"><i class="money icon"></i> Bank Accounts</div>'.html_safe, bank_accounts_path
-          = link_to '<div class="item"><i class="sign out icon"></i> Sign Out</div>'.html_safe,  destroy_session_path, method: :delete
+          = link_to_bank_accounts
+          = link_to_sign_out
 
