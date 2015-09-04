@@ -3,10 +3,10 @@
     = link_to params.merge(year: @year.pred) do
       %i.chevron.left.icon
       = @year.pred
-  .twelve.wide.column.center.aligned
-    %h1
-      = "Archives #{@year}"
-      = render partial: "account_switcher"
+  .three.wide.column.right.aligned
+    %h1= "Archives #{@year}"
+  .five.wide.column
+    = render partial: "account_switcher"
   .two.wide.column.right.aligned.floated
     = link_to params.merge(year: @year.next) do
       = @year.next
